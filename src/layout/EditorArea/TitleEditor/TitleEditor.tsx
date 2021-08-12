@@ -1,6 +1,6 @@
 import React from "react"
 
-import TextEditor from "../../../components/TextEditor/TextEditor"
+import TextEditor, { TextEditorCtx } from "../../../components/TextEditor/TextEditor"
 
 import styles from "./TitleEditor.module.css"
 
@@ -16,12 +16,18 @@ const TitleEditor = ({
     onChange?: (newTitle: string) => void
 }) => {
 
+    const _onChange = (ctx: TextEditorCtx) => {
+        onChange && onChange(ctx.text)
+    }
+
+    console.log('[TitleEditor Render]')
+
     return (
         <TextEditor
             initialText={initialTitle || ''}
             placeholder={placeholder || ''}
             className={styles.title_editor}
-            onChange={onChange || (() => { })}
+            onChange={_onChange}
             handle={handle}
         />
     )

@@ -1,6 +1,5 @@
 .tags_bar {
-    grid-column: 1/2;
-    grid-row: 2/3;
+    flex-shrink: 0;
     margin: 0 16px;
     min-height: 34px;
     display: flex;

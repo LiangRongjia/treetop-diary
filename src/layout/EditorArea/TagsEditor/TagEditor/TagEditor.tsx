@@ -1,5 +1,5 @@
 import React from 'react'
-import TextEditor from '../../../../components/TextEditor/TextEditor'
+import TextEditor, { TextEditorCtx } from '../../../../components/TextEditor/TextEditor'
 import styles from './TagEditor.module.css'
 
 const TagEditor = ({
@@ -13,20 +13,24 @@ const TagEditor = ({
     onChange: (newText: string) => void
     onDelete: () => void
 }) => {
+
+    const _onChange = (ctx: TextEditorCtx) => {
+        onChange(ctx.text)
+    }
+
     return (
         <div className={styles.tag}>
             <TextEditor
                 initialText={initialText}
                 placeholder="新标签"
                 className={styles.text}
-                onChange={onChange}
+                onChange={_onChange}
                 handle={handle}
             />
             <div
                 className={styles.delete_button}
-                onClick={onDelete}>
-                
-            </div>
+                onClick={onDelete}
+            ></div>
         </div>
     )
 }

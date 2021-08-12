@@ -1,6 +1,5 @@
 .title_editor {
-    grid-column: 1/2;
-    grid-row: 1/2;
+    flex-shrink: 0;
     font-size: 32px;
     padding: 16px;
     min-height: 36px;

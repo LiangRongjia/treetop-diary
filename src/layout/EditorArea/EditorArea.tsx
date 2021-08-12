@@ -38,6 +38,7 @@ const EditorArea = ({
                 onTagsChange={onTagsChange}
             />
             <RichTextEditor
+                className={styles.content_editor}
                 onChange={onContentChange}
                 handle={handle}
                 initialHtmlContent={content}

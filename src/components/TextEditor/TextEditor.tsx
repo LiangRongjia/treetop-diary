@@ -1,6 +1,15 @@
 import React, { createRef, useEffect } from "react"
 import styles from "./TextEditor.module.css"
 
+class TextEditorCtx {
+    ele
+    text
+    constructor(ref: React.RefObject<HTMLDivElement>) {
+        this.ele = ref.current
+        this.text = ref.current?.textContent || ''
+    }
+}
+
 /**
  * 文本编辑器
  * 1. 通过 `onChange` 回调函数接口获取当前文本值
@@ -10,16 +19,20 @@ const TextEditor = ({
     initialText,
     placeholder,
     className,
-    onChange,
     handle,
-    disabled
+    disabled,
+    onChange,
+    onDoubleClick,
+    onClick
 }: {
-    initialText: string,
-    placeholder: string,
-    className: string,
+    initialText?: string,
+    placeholder?: string,
+    className?: string,
     handle: number,
-    onChange: (currentText: string) => void,
-    disabled?: boolean
+    disabled?: boolean,
+    onChange?: (ctx: TextEditorCtx) => void,
+    onDoubleClick?: (ctx: TextEditorCtx, e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void,
+    onClick?: (ctx: TextEditorCtx, e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
 }) => {
 
     const eleRef = createRef<HTMLDivElement>()
@@ -27,7 +40,7 @@ const TextEditor = ({
     const onInput = () => {
         const isVoid = (eleRef.current?.textContent || '') === '' ? 'true' : 'false'
         eleRef.current?.setAttribute('data-is-void', isVoid)
-        onChange(eleRef.current?.textContent || '')
+        onChange && onChange(new TextEditorCtx(eleRef))
     }
 
     /**
@@ -35,10 +48,18 @@ const TextEditor = ({
      */
     useEffect(() => {
         if (eleRef.current) {
-            eleRef.current.textContent = initialText
+            eleRef.current.textContent = initialText || ''
         }
         onInput()
-    }, [handle])
+    }, [handle, disabled])
+
+    const _onDoubleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        onDoubleClick && onDoubleClick(new TextEditorCtx(eleRef), e)
+    }
+
+    const _onClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        onClick && onClick(new TextEditorCtx(eleRef), e)
+    }
 
     return (
         <div
@@ -47,8 +68,12 @@ const TextEditor = ({
             contentEditable={disabled ? 'false' : 'true'}
             placeholder={placeholder}
             data-is-void="false"
-            onInput={onInput}></div>
+            onInput={onInput}
+            onDoubleClick={_onDoubleClick}
+            onClick={(_onClick)}
+        ></div>
     )
 }
 
 export default TextEditor
+export { TextEditorCtx }

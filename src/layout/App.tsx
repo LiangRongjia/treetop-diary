@@ -14,13 +14,17 @@ const App = () => {
         yearIndexs,
         months,
         diarys,
+        activeYearIndex,
         activeDiaryIndex,
         activeMonthIndex,
         editTarget,
         editorHandle,
         onSelectYear,
         onSelectMonth,
-        onSelectDiary
+        onSelectDiary,
+        onEditYearIndex,
+        onDeleteYear,
+        onAddYear
     } = useApp()
 
     console.log('[App Render]')
@@ -28,8 +32,12 @@ const App = () => {
     return (
         <div id="app" className={styles.app}>
             <Header
+                activeYearIndex={activeYearIndex}
                 yearIndexs={yearIndexs}
                 onSelectYear={onSelectYear}
+                onEditYearIndex={onEditYearIndex}
+                onDeleteYear={onDeleteYear}
+                onAddYear={onAddYear}
             />
             <MonthList
                 months={months}

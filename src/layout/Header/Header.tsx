@@ -1,12 +1,21 @@
 import React, { createRef } from 'react'
 import styles from './Header.module.css'
+import YearsEditor from './YearsEditor/YearsEditor'
 
 const Header = ({
-    yearIndexs: yearIndexs,
-    onSelectYear
+    activeYearIndex,
+    yearIndexs,
+    onSelectYear,
+    onEditYearIndex,
+    onDeleteYear,
+    onAddYear
 }: {
+    activeYearIndex: number,
     yearIndexs: number[],
-    onSelectYear?: (newYearIndex: number) => void
+    onSelectYear: (newYearIndex: number) => void,
+    onEditYearIndex: (oldIndex: number, newIndex: number) => void,
+    onDeleteYear: (index: number) => void,
+    onAddYear: (yearIndex: number) => void
 }) => {
 
     const selector = createRef<HTMLSelectElement>()
@@ -15,25 +24,22 @@ const Header = ({
         if (selector.current === null) return
         const optionIndex = selector.current.selectedIndex
         const yearIndex = parseInt(selector.current.options[optionIndex].value)
-        onSelectYear && onSelectYear(yearIndex)
+        onSelectYear(yearIndex)
     }
 
     console.log('[Header Render]')
 
     return (
         <div className={styles.header}>
-            <select
-                ref={selector}
-                onChange={onChange}>
-                {yearIndexs.map(yearIndex => (
-                    <option
-                        value={yearIndex}
-                        key={yearIndex}>
-                        {yearIndex}
-                    </option>
-                ))}
-            </select>
-        </div >
+            <YearsEditor
+                activeYearIndex={activeYearIndex}
+                yearIndexs={yearIndexs}
+                onEditYearIndex={onEditYearIndex}
+                onAddYear={onAddYear}
+                onDeleteYear={onDeleteYear}
+                onSelectYear={onSelectYear}
+            />
+        </div>
     )
 }
 

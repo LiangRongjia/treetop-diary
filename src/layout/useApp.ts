@@ -5,7 +5,7 @@ const useApp = () => {
 
     const [data, setData] = useState(new Data())
 
-    const [activeYearIndex, setActiveYearIndex] = useState(0)
+    const [activeYearIndex, setActiveYearIndex] = useState(Infinity)
     const [activeMonthIndex, setActiveMonthIndex] = useState(0)
     const [activeDiaryIndex, setActiveDiaryIndex] = useState(0)
     const [editorHandle, setEditorHandle] = useState(0)
@@ -22,7 +22,7 @@ const useApp = () => {
     /** 若当前年份不合法，选择合法的第一个年份 */
     if (years.length !== 0
         && !(years.map(year => year.index).includes(activeYearIndex))) {
-        setActiveYearIndex(years.map(year => year.index).shift() || 0)
+        setActiveYearIndex(years.map(year => year.index).shift() || Infinity)
     }
 
     /** 以下是 activexxx 变量变更所触发的回调函数。 */
@@ -52,6 +52,8 @@ const useApp = () => {
     const onAddYear = (yearIndex: number) => {
         const newYears = [...years]
         newYears.push(new Year(yearIndex))
+        newYears.sort((a, b) => a.index - b.index)
+        setData({ ...data, years: newYears })
         setActiveDiaryIndex(0)
         setActiveMonthIndex(0)
         setActiveYearIndex(yearIndex)
@@ -59,10 +61,25 @@ const useApp = () => {
     }
 
     /** 当删除某年份时执行。 */
-    const onDeleteYear = () => {
+    const onDeleteYear = (index: number) => {
+        const newYears = years.filter(y => y.index !== index)
+        setData({ ...data, years: newYears })
         setActiveDiaryIndex(0)
         setActiveMonthIndex(0)
-        setActiveYearIndex(years[0]?.index || 0)
+        setActiveYearIndex(years[0]?.index || Infinity)
+        setEditorHandle(e => e + 1)
+    }
+
+    /** 当编辑某年份的年份数字 index 时执行。 */
+    const onEditYearIndex = (oldIndex: number, newIndex: number) => {
+        const year = years.filter(y => y.index === oldIndex).shift()
+        if (year == undefined) return
+        year.index = newIndex
+        years.sort((a, b) => a.index - b.index)
+        setData({ ...data })
+        setActiveDiaryIndex(0)
+        setActiveMonthIndex(0)
+        setActiveYearIndex(newIndex)
         setEditorHandle(e => e + 1)
     }
 
@@ -185,11 +202,15 @@ const useApp = () => {
         diarys,
         activeDiaryIndex,
         activeMonthIndex,
+        activeYearIndex,
         editTarget,
         editorHandle,
         onSelectYear,
         onSelectMonth,
-        onSelectDiary
+        onSelectDiary,
+        onEditYearIndex,
+        onDeleteYear,
+        onAddYear
     }
 }
 
