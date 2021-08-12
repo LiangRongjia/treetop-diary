@@ -7,9 +7,6 @@ import MonthList from './MonthList/MonthList'
 import DiaryList from './DiaryList/DiaryList'
 import EditorArea from './EditorArea/EditorArea'
 import useApp from './useApp'
-import { Year } from '../types'
-
-
 
 const App = () => {
 

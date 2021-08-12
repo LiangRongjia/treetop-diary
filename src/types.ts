@@ -1,5 +1,7 @@
+import { getDaysCount } from "./utils/utils"
+
 class RichText {
-    data = ''
+    data
     constructor(data = '') {
         this.data = data
     }
@@ -29,13 +31,19 @@ class Month {
     tags
     summary
     diarys
+    yearIndex
     constructor(
+        yearIndex: number,
         index: number,
         title: string = '',
         tags: string[] = [],
         summary: RichText = new RichText(''),
-        diarys: Diary[] = []
+        diarys: Diary[] = (Array(getDaysCount(yearIndex, index))
+            .fill(0)
+            .map((_, i) => new Diary(i + 1))
+        )
     ) {
+        this.yearIndex = yearIndex
         this.index = index
         this.title = title
         this.tags = tags
@@ -55,7 +63,7 @@ class Year {
         title: string = '',
         tags: string[] = [],
         summary: RichText = new RichText(''),
-        months: Month[] = []
+        months: Month[] = Array(12).fill(0).map((_, m) => new Month(index, m + 1))
     ) {
         this.index = index
         this.title = title
@@ -72,10 +80,19 @@ class FileData {
     constructor(
         formatVersion: string,
         savedTime: string,
-        years: Year[] = []
+        years: Year[]
     ) {
         this.formatVersion = formatVersion
         this.savedTime = savedTime
+        this.years = years
+    }
+}
+
+class Data {
+    years
+    constructor(
+        years: Year[] = [new Year((new Date).getFullYear())]
+    ) {
         this.years = years
     }
 }
@@ -85,5 +102,6 @@ export {
     Diary,
     Month,
     Year,
-    FileData
+    FileData,
+    Data
 }

@@ -1,10 +1,10 @@
 import { useState } from "react"
-import { Diary, Month, Year } from "../types"
-import { getStateExample } from "../utils/stateExample"
+import { Data, Diary, Month, Year } from "../types"
 
 const useApp = () => {
 
-    const [data, setData] = useState(getStateExample())
+    const [data, setData] = useState(new Data())
+
     const [activeYearIndex, setActiveYearIndex] = useState(0)
     const [activeMonthIndex, setActiveMonthIndex] = useState(0)
     const [activeDiaryIndex, setActiveDiaryIndex] = useState(0)
