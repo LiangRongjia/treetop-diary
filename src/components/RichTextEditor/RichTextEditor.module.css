@@ -1,0 +1,29 @@
+.rich_text_editor {
+    display: flex;
+    flex-direction: column;
+}
+
+.rich_text_editor_menu {
+    box-sizing: border-box;
+    border-top: 1px solid #ccc;
+    width: 100%;
+}
+
+.rich_text_editor_menu>* {
+    background-color: transparent !important;
+}
+
+.rich_text_editor_body {
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    border-top: 1px solid #ccc;
+    flex-basis: 100px;
+    flex-grow: 1;
+    flex-shrink: 0;
+}
+
+.rich_text_editor_body p {
+    overflow-wrap: break-word;
+    overflow-wrap: anywhere;
+}
