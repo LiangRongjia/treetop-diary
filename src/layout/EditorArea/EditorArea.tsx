@@ -3,8 +3,12 @@ import styles from './EditorArea.module.css'
 import TitleEditor from './TitleEditor/TitleEditor'
 import RichTextEditor from '../../components/RichTextEditor/RichTextEditor'
 import TagsEditor from './TagsEditor/TagsEditor'
+import CurrentPath from '../CurrentPath/CurrentPath'
 
 const EditorArea = ({
+    year,
+    month,
+    date,
     handle,
     title,
     tags,
@@ -14,6 +18,9 @@ const EditorArea = ({
     onContentChange,
     titleEditorPlaceholder
 }: {
+    year: number,
+    month: number,
+    date: number,
     handle: number,
     title: string,
     tags: string[],
@@ -26,6 +33,11 @@ const EditorArea = ({
 
     return (
         <div className={styles.diary_page}>
+            <CurrentPath
+                year={year}
+                month={month}
+                date={date}
+            />
             <TitleEditor
                 initialTitle={title}
                 onChange={onTitleChange}
@@ -33,8 +45,7 @@ const EditorArea = ({
                 placeholder={titleEditorPlaceholder}
             />
             <TagsEditor
-                initialTags={tags}
-                handle={handle}
+                tags={tags}
                 onTagsChange={onTagsChange}
             />
             <RichTextEditor

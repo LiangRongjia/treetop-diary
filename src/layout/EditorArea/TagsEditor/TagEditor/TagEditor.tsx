@@ -3,13 +3,11 @@ import TextEditor, { TextEditorCtx } from '../../../../components/TextEditor/Tex
 import styles from './TagEditor.module.css'
 
 const TagEditor = ({
-    handle,
-    initialText,
+    text,
     onChange,
     onDelete
 }: {
-    handle: number,
-    initialText: string,
+    text: string,
     onChange: (newText: string) => void
     onDelete: () => void
 }) => {
@@ -21,7 +19,7 @@ const TagEditor = ({
     return (
         <div className={styles.tag}>
             <TextEditor
-                text={initialText}
+                text={text}
                 placeholder="新标签"
                 className={styles.text}
                 onChange={_onChange}

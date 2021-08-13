@@ -53,6 +53,9 @@ const App = () => {
                 />
             }
             <EditorArea
+                year={activeYearIndex}
+                month={activeMonthIndex}
+                date={activeDiaryIndex}
                 handle={editorHandle}
                 title={editTarget.title}
                 tags={editTarget.tags}
