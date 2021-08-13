@@ -17,11 +17,13 @@
     white-space: nowrap;
     overflow: overlay;
 }
-.active_year::-webkit-scrollbar{
+
+.active_year::-webkit-scrollbar {
     height: 6px;
 }
-.active_year::-webkit-scrollbar-thumb{
-background-color: rgba(0, 0, 0, 0.35);
+
+.active_year::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.35);
 }
 
 .dropdown_button, .add_button, .delete_button {
@@ -56,8 +58,8 @@ background-color: rgba(0, 0, 0, 0.35);
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 96px;
-    padding: 4px 12px;
+    width: 112px;
+    padding: 4px 4px;
     background-color: rgba(255, 255, 255, 0.25);
     backdrop-filter: blur(20px);
     color: rgba(0, 0, 0, 0.87);
@@ -76,9 +78,35 @@ background-color: rgba(0, 0, 0, 0.35);
 
 .year_option {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    height: 28px;
     padding: 4px 0;
     width: 100%;
+    border-radius: 4px;
     cursor: pointer;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.year_option+.year_option::before {
+    position: relative;
+    display: block;
+    content: "";
+    width: calc(100% - 8px);
+    height: 0px;
+    box-sizing: border-box;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    top: -7px;
+}
+
+.year_option:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    box-shadow: inset 0 0 4px -1px rgba(0, 0, 0, 0.1);
+}
+
+.year_option:hover::before, .year_option:hover+.year_option::before {
+    border-top: 1px solid rgba(0, 0, 0, 0);
 }
