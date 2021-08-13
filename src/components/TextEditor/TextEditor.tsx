@@ -11,69 +11,80 @@ class TextEditorCtx {
 }
 
 /**
- * 文本编辑器
- * 1. 通过 `onChange` 回调函数接口获取当前文本值
- * 2. 通过变更 `handle` 重置编辑器
+ * 设置 contentEditable div 样式。
+ * 1. 检查内容是否为空，同步设置 data-is-empty 属性，通知 CSS 控制样式
+ * @param divEle contentEditable div 元素
  */
-const TextEditor = ({
-    initialText,
+const updateContentEditableDivStyle = (divEle: HTMLDivElement) => {
+    const isEmpty = divEle.textContent === ''
+    divEle.setAttribute('data-is-empty', isEmpty ? 'true' : 'false')
+}
+
+/**
+ * 设置 contentEditable div 状态。
+ * 1. 设置文本内容
+ * 2. 检查内容是否为空，同步设置 data-is-empty 属性，通知 CSS 控制样式
+ * @param divEle contentEditable div 元素
+ * @param text 要更新的文本
+ */
+const updateContentEditableDiv = (divEle: HTMLDivElement, text: string) => {
+    divEle.textContent = text || ''
+    updateContentEditableDivStyle(divEle)
+}
+
+const TextEditor2: React.FC<{
+    text?: string,
+    placeholder?: string,
+    className?: string,
+    disabled?: boolean,
+    onChange?: (ctx: TextEditorCtx, e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void,
+    onDoubleClick?: (ctx: TextEditorCtx, e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void,
+    onClick?: (ctx: TextEditorCtx, e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
+}> = ({
+    text,
     placeholder,
     className,
-    handle,
     disabled,
     onChange,
     onDoubleClick,
     onClick
-}: {
-    initialText?: string,
-    placeholder?: string,
-    className?: string,
-    handle: number,
-    disabled?: boolean,
-    onChange?: (ctx: TextEditorCtx) => void,
-    onDoubleClick?: (ctx: TextEditorCtx, e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void,
-    onClick?: (ctx: TextEditorCtx, e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
 }) => {
+        const eleRef = createRef<HTMLDivElement>()
 
-    const eleRef = createRef<HTMLDivElement>()
-
-    const onInput = () => {
-        const isVoid = (eleRef.current?.textContent || '') === '' ? 'true' : 'false'
-        eleRef.current?.setAttribute('data-is-void', isVoid)
-        onChange && onChange(new TextEditorCtx(eleRef))
-    }
-
-    /**
-     * 当 handle 发生变化，重置 TextEditor
-     */
-    useEffect(() => {
-        if (eleRef.current) {
-            eleRef.current.textContent = initialText || ''
+        const _onInput = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+            eleRef.current && updateContentEditableDivStyle(eleRef.current)
+            onChange && onChange(new TextEditorCtx(eleRef), e)
         }
-        onInput()
-    }, [handle, disabled])
 
-    const _onDoubleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        onDoubleClick && onDoubleClick(new TextEditorCtx(eleRef), e)
+        const _onDoubleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+            onDoubleClick && onDoubleClick(new TextEditorCtx(eleRef), e)
+        }
+
+        const _onClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+            onClick && onClick(new TextEditorCtx(eleRef), e)
+        }
+
+        /** 
+         * 入参变更则更新 div 内容，因为无法使用 React 的 {} 绑定，必须手动绑定
+         */
+        useEffect(() => {
+            eleRef.current && updateContentEditableDiv(eleRef.current, text || '')
+        })
+
+        return (
+            <div
+                ref={eleRef}
+                className={`${styles.text_editor} ${className}`}
+                contentEditable={disabled ? 'false' : 'true'}
+                placeholder={placeholder}
+                data-is-empty="false"
+                onInput={_onInput}
+                onDoubleClick={_onDoubleClick}
+                onClick={_onClick}
+            ></div>
+        )
     }
 
-    const _onClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        onClick && onClick(new TextEditorCtx(eleRef), e)
-    }
+export default TextEditor2
 
-    return (
-        <div
-            className={`${styles.text_editor} ${className}`}
-            ref={eleRef}
-            contentEditable={disabled ? 'false' : 'true'}
-            placeholder={placeholder}
-            data-is-void="false"
-            onInput={onInput}
-            onDoubleClick={_onDoubleClick}
-            onClick={(_onClick)}
-        ></div>
-    )
-}
-
-export default TextEditor
 export { TextEditorCtx }

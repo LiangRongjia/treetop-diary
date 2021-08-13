@@ -21,11 +21,10 @@ const TagEditor = ({
     return (
         <div className={styles.tag}>
             <TextEditor
-                initialText={initialText}
+                text={initialText}
                 placeholder="新标签"
                 className={styles.text}
                 onChange={_onChange}
-                handle={handle}
             />
             <div
                 className={styles.delete_button}

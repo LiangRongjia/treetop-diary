@@ -5,6 +5,7 @@
 .active_year {
     height: 28px;
     width: 96px;
+    padding: 0 12px;
     text-align: center;
     line-height: 28px;
     background-color: rgba(0, 0, 0, 0.15);
@@ -13,6 +14,14 @@
     cursor: pointer;
     user-select: none;
     outline: none;
+    white-space: nowrap;
+    overflow: overlay;
+}
+.active_year::-webkit-scrollbar{
+    height: 6px;
+}
+.active_year::-webkit-scrollbar-thumb{
+background-color: rgba(0, 0, 0, 0.35);
 }
 
 .dropdown_button, .add_button, .delete_button {
@@ -48,7 +57,7 @@
     flex-direction: column;
     align-items: center;
     width: 96px;
-    padding: 4px 0;
+    padding: 4px 12px;
     background-color: rgba(255, 255, 255, 0.25);
     backdrop-filter: blur(20px);
     color: rgba(0, 0, 0, 0.87);

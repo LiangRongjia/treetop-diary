@@ -2,7 +2,7 @@
     overflow: hidden;
 }
 
-.text_editor[data-is-void="true"]::before {
+.text_editor[data-is-empty="true"]::before {
     content: attr(placeholder);
     color: rgba(0, 0, 0, 0.25);
 }

@@ -24,18 +24,16 @@ const RichTextEditor = ({
 }) => {
 
     const _onChange = (content: string) => {
-        console.log(content)
         onChange && onChange(content)
     }
 
-    console.log(initialHtmlContent)
     return (
         <ReactQuill
             className={`${styles.rich_text_editor} ${className}`}
             key={handle}
             theme="snow"
             value={initialHtmlContent}
-            onChange={onChange}
+            onChange={_onChange}
         />
     )
 }

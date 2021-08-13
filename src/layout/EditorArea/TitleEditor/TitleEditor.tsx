@@ -24,11 +24,10 @@ const TitleEditor = ({
 
     return (
         <TextEditor
-            initialText={initialTitle || ''}
+            text={initialTitle || ''}
             placeholder={placeholder || ''}
             className={styles.title_editor}
             onChange={_onChange}
-            handle={handle}
         />
     )
 }

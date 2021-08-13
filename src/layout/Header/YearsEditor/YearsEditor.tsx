@@ -1,9 +1,24 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import TextEditor, { TextEditorCtx } from "../../../components/TextEditor/TextEditor"
 
 import styles from "./YearsEditor.module.css"
 
-const YearsEditor = ({
+/**
+ * 年编辑器逻辑
+ * 1. 单击编辑框
+ *    1. 非编辑状态下，重选年份
+ *    2. 编辑状态下，默认行为
+ * 2. 双击编辑框
+ *    1. 非编辑状态下，进入编辑状态
+ *    2. 编辑状态下，默认行为
+ * 3. 单击编辑框外
+ *    1. 非编辑状态下，默认行为
+ *    2. 编辑状态下，退出编辑状态
+ * 4. 单击下拉按钮
+ *    1. 非下拉状态下，下拉
+ *    2. 下拉状态下，任何点击都关闭下拉状态
+ */
+const YearsEditor2 = ({
     activeYearIndex,
     yearIndexs,
     onEditYearIndex,
@@ -25,37 +40,55 @@ const YearsEditor = ({
     /** 标记是否正在编辑 */
     const [editting, setEditting] = useState(false)
 
-    /** 记忆编辑器文本转化后的数字 */
-    const [number, setNumber] = useState(activeYearIndex)
-
     /** 非选中年份 */
     const inactiveYearIndexs = yearIndexs.filter(i => i !== activeYearIndex)
 
     /**
      * 退出编辑状态。
      * 1. 取消挂载于 `document` 的监听器（即本回调函数）；
-     * 2. 关闭编辑状态；
-     * 3. 若 number 不与现有年份重复，调用上层交给的回调函数，修改年份值为此年份。
+     * 2. 关闭编辑状态。
      */
     const exitEditting = () => {
-
         document.removeEventListener('click', exitEditting)
-
         setEditting(false)
+    }
 
-        if (!yearIndexs.includes(number)) {
-            onEditYearIndex(activeYearIndex, number)
-        }
+    /**
+     * 进入编辑状态。
+     * 1. 阻止冒泡，防止立即退出编辑；
+     * 2. 添加挂载于 `document` 的监听器，以便日后退出编辑状态；
+     * 3. 进入编辑状态；
+     * 4. 延时添加焦点，立刻添加将被 `React` 过程抢掉焦点。
+     */
+    const enterEditting = (divEle: HTMLDivElement, e: Event) => {
+        e.stopPropagation()
+        document.addEventListener('click', exitEditting)
+        setEditting(true)
+        setTimeout(() => {
+            divEle.focus()
+        })
     }
 
     /**
      * 关闭下拉列表。
      * 1. 设置下拉列表显示状态；
-     * 2. 删除 `document` 上的监听器（即本回调函数）
+     * 2. 删除 `document` 上的监听器（即本回调函数）。
      */
     const closeDropdown = () => {
-        setDropdownShow(false)
         document.removeEventListener('click', closeDropdown)
+        setDropdownShow(false)
+    }
+
+    /**
+     * 打开下拉列表。
+     * 1. 阻止冒泡，防止立即退出编辑；
+     * 2. 设置下拉列表显示状态；
+     * 3. 添加 `document` 上的监听器，以日后关闭下拉列表。
+     */
+    const openDropdown = (e: Event) => {
+        e.stopPropagation()
+        document.addEventListener('click', closeDropdown)
+        setDropdownShow(true)
     }
 
     /**
@@ -64,16 +97,11 @@ const YearsEditor = ({
      * 2. 找到不与现有年份重复的年份，使用循环自增的方式；
      * 3. 调用上层交给的回调函数，添加一个年份数据。
      */
-    const onAddBtnClick = () => {
-
+    const _onAddBtnClick = () => {
         let newYearIndex = (new Date).getFullYear()
-
         while (yearIndexs.includes(newYearIndex)) {
-
             newYearIndex++
-
         }
-
         onAddYear(newYearIndex)
     }
 
@@ -81,10 +109,8 @@ const YearsEditor = ({
      * 当点击删除按钮时执行。
      * 1. 调用上层交付的回调函数，删除当前年份。
      */
-    const onDeleteBtnClick = () => {
-
+    const _onDeleteBtnClick = () => {
         onDeleteYear(activeYearIndex)
-
     }
 
     /**
@@ -94,95 +120,59 @@ const YearsEditor = ({
      * @param ctx `TextEditor` 编辑器提供的 `contex` 对象
      * @param e `React` 鼠标点击事件
      */
-    const onActiveYearClick = (ctx: TextEditorCtx, e: React.MouseEvent) => {
-
+    const _onActiveYearClick = (ctx: TextEditorCtx, e: React.MouseEvent) => {
         if (editting) {
-
             e.stopPropagation()
-
         } else {
-
             onSelectYear(activeYearIndex)
-
         }
     }
 
     /**
      * 构造函数，为指定年份的选项构造项点击回调函数。
      * @param index 指定的年份。
-     * @returns 当点击指定年份选项时调用的回调函数，即执行上层交付的回调函数，选中指定年份
+     * @returns 当点击指定年份选项时调用的回调函数，即执行上层交付的回调函数，选中指定年份。
      */
-    const onYearOptionClick = (index: number) => () => {
+    const _onYearOptionClick = (index: number) => () => {
         onSelectYear(index)
     }
 
     /**
      * 当点击下拉列表按钮时执行。
-     * 1. 当下拉列表展开时，什么都不做，因为下拉列表收回靠的是 `document` 上的监听器；
-     * 2. 否则，即要展开下拉列表，先阻止事件冒泡，防止事件冒泡至 `document`，导致收回下拉列表；
-     * 3. 在 `document` 上添加监听器，以日后收回下拉列表
-     * 4. 更新下拉列表状态，展开下拉列表
+     * 1. 若未下拉，则下拉
+     * 2. 若正在编辑，退出编辑
      * @param e `React` 鼠标事件
      */
-    const onDropdownBtnClick = (e: React.MouseEvent) => {
-
-        if (dropdownShow) return
-
-        e.nativeEvent.stopPropagation()
-
-        document.addEventListener('click', closeDropdown)
-
-        setDropdownShow(true)
-
+    const _onDropdownBtnClick = (e: React.MouseEvent) => {
+        !dropdownShow && openDropdown(e.nativeEvent)
+        editting && exitEditting()
     }
 
     /**
      * 当正在编辑时执行。
-     * 1. 将字符串转化为数字；
-     * 2. 只有是数字且非 `NaN`，才：
-     * 3. 设置到状态中。
-     * @param ctx `TextEditor` 提供的 context
+     * 1. 文本转化为数字；
+     * 2. 若 输入是，能用 parseInt 正确转换为 number，且不是 NaN，且与现有年份不重复，
+     * 3. 则 调用上层交付的编辑回调函数，更改年份数字。否则，不设置年份，编辑框内容自由。
+     * @param _ctx `TextEditor` 提供的 context
      */
-    const onTextEditorChange = (ctx: TextEditorCtx) => {
-
-        const num = parseInt(ctx.text)
-
-        if (!isNaN(num)) {
-            setNumber(num)
+    const _onTextEditorChange = (_ctx: TextEditorCtx) => {
+        const num = parseInt(_ctx.text)
+        if (`${num}` === _ctx.text
+            && !isNaN(num)
+            && !inactiveYearIndexs.includes(num)) {
+            onEditYearIndex(activeYearIndex, num)
         }
     }
 
     /**
      * 当双击当前选中年份框时执行，目标是进入编辑状态。
-     * 1. 当已是编辑状态时，什么也不做，否则：
-     * 2. 阻止事件冒泡，防止触发 `document` 上的监听器，导致立即取消编辑状态；
-     * 3. 在 `document` 上添加监听器，以日后取消编辑状态；
-     * 4. 设置编辑状态；
-     * 5. 在本次事件循环结束后聚焦到编辑框上，不能立即聚焦，否则会被 `React` 过程抢掉焦点。
+     * 1. 当在不编辑状态，进入编辑。
      * @param ctx `TextEditor` 提供的 context
      * @param e `React` 的鼠标事件
      */
-    const onActiveYearDoubleClick = (ctx: TextEditorCtx, e: React.MouseEvent) => {
-
-        if (editting) return
-
-        e.nativeEvent.stopPropagation()
-
-        document.addEventListener('click', exitEditting)
-
-        setEditting(!editting)
-
-        setTimeout(() => {
-            ctx.ele?.focus()
-        })
+    const _onActiveYearDoubleClick = (ctx: TextEditorCtx, e: React.MouseEvent) => {
+        !editting && ctx.ele && enterEditting(ctx.ele, e.nativeEvent)
     }
-
-    /**
-     * 当是否编辑状态改变的时候，重置编辑器。
-     */
-    useEffect(() => {
-        setNumber(activeYearIndex)
-    }, [editting])
 
     console.log('[YearsEditor Render]')
 
@@ -193,30 +183,30 @@ const YearsEditor = ({
                 {inactiveYearIndexs.length === 0
                     ? <div className={styles.placeholder}>空</div>
                     : inactiveYearIndexs.map(index => (
-                        <div key={index}
+                        <div
+                            key={index}
                             className={styles.year_option}
-                            onClick={onYearOptionClick(index)}>
+                            onClick={_onYearOptionClick(index)}>
                             {index}
                         </div>
                     ))}
             </div>
             <TextEditor
-                initialText={`${activeYearIndex}`}
+                text={`${activeYearIndex}`}
                 className={styles.active_year}
-                handle={editting ? 0 : activeYearIndex}
-                onChange={onTextEditorChange}
+                onChange={_onTextEditorChange}
                 disabled={!editting}
-                onDoubleClick={onActiveYearDoubleClick}
-                onClick={onActiveYearClick}
+                onDoubleClick={_onActiveYearDoubleClick}
+                onClick={_onActiveYearClick}
             />
             <div className={styles.dropdown_button}
-                onClick={onDropdownBtnClick}><div></div></div>
+                onClick={_onDropdownBtnClick}><div></div></div>
             <div className={styles.delete_button}
-                onClick={onDeleteBtnClick}></div>
+                onClick={_onDeleteBtnClick}></div>
             <div className={styles.add_button}
-                onClick={onAddBtnClick}></div>
+                onClick={_onAddBtnClick}></div>
         </div>
     )
 }
 
-export default YearsEditor
+export default YearsEditor2
