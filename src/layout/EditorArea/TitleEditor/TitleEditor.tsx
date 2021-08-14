@@ -6,9 +6,9 @@ import styles from "./TitleEditor.module.css"
 
 const TitleEditor:
     React.FC<{
-        initialTitle?: string,
-        placeholder?: string,
-        onChange?: (newTitle: string) => void
+        initialTitle: string,
+        placeholder: string,
+        onChange: (newTitle: string) => void
     }> = ({
         initialTitle,
         onChange,
@@ -23,10 +23,10 @@ const TitleEditor:
 
         return (
             <TextEditor
-                text={initialTitle || ''}
+                defaultText={initialTitle || ''}
                 placeholder={placeholder || ''}
                 className={styles.title_editor}
-                onChange={_onChange}
+                onInput={_onChange}
             />
         )
     }

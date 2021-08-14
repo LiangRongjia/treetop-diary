@@ -20,10 +20,10 @@ const TagEditor:
         return (
             <div className={styles.tag}>
                 <TextEditor
-                    text={text}
+                    defaultText={text}
                     placeholder="新标签"
                     className={styles.text}
-                    onChange={_onChange}
+                    onInput={_onChange}
                 />
                 <div
                     className={styles.delete_button}

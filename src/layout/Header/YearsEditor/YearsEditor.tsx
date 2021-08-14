@@ -39,7 +39,7 @@ const YearsEditor2:
         const [dropdownShow, setDropdownShow] = useState(false)
 
         /** 标记是否正在编辑 */
-        const [editting, setEditting] = useState(false)
+        const [editable, setEditable] = useState(false)
 
         /** 非选中年份 */
         const inactiveYearIndexs = yearIndexs.filter(i => i !== activeYearIndex)
@@ -51,7 +51,7 @@ const YearsEditor2:
          */
         const exitEditting = () => {
             document.removeEventListener('click', exitEditting)
-            setEditting(false)
+            setEditable(false)
         }
 
         /**
@@ -64,7 +64,7 @@ const YearsEditor2:
         const enterEditting = (divEle: HTMLDivElement, e: Event) => {
             e.stopPropagation()
             document.addEventListener('click', exitEditting)
-            setEditting(true)
+            setEditable(true)
             setTimeout(() => {
                 divEle.focus()
             })
@@ -121,9 +121,9 @@ const YearsEditor2:
          * @param ctx `TextEditor` 编辑器提供的 `contex` 对象
          * @param e `React` 鼠标点击事件
          */
-        const _onActiveYearClick = (ctx: TextEditorCtx, e: React.MouseEvent) => {
-            if (editting) {
-                e.stopPropagation()
+        const _onActiveYearClick = (ctx: TextEditorCtx) => {
+            if (editable) {
+                ctx.evt?.stopPropagation()
             } else {
                 onSelectYear(activeYearIndex)
             }
@@ -146,23 +146,7 @@ const YearsEditor2:
          */
         const _onDropdownBtnClick = (e: React.MouseEvent) => {
             !dropdownShow && openDropdown(e.nativeEvent)
-            editting && exitEditting()
-        }
-
-        /**
-         * 当正在编辑时执行。
-         * 1. 文本转化为数字；
-         * 2. 若 输入是，能用 parseInt 正确转换为 number，且不是 NaN，且与现有年份不重复，
-         * 3. 则 调用上层交付的编辑回调函数，更改年份数字。否则，不设置年份，编辑框内容自由。
-         * @param _ctx `TextEditor` 提供的 context
-         */
-        const _onTextEditorChange = (_ctx: TextEditorCtx) => {
-            const num = parseInt(_ctx.text)
-            if (`${num}` === _ctx.text
-                && !isNaN(num)
-                && !inactiveYearIndexs.includes(num)) {
-                onEditYearIndex(activeYearIndex, num)
-            }
+            editable && exitEditting()
         }
 
         /**
@@ -171,8 +155,28 @@ const YearsEditor2:
          * @param ctx `TextEditor` 提供的 context
          * @param e `React` 的鼠标事件
          */
-        const _onActiveYearDoubleClick = (ctx: TextEditorCtx, e: React.MouseEvent) => {
-            !editting && ctx.ele && enterEditting(ctx.ele, e.nativeEvent)
+        const _onActiveYearDoubleClick = (ctx: TextEditorCtx) => {
+            !editable
+                && ctx.ele
+                && ctx.evt
+                && enterEditting(ctx.ele, ctx.evt.nativeEvent)
+        }
+
+        /**
+         * 当退出编辑状态时执行。
+         * 1. 若年份合法，调用上层交付的回调函数，设置年份；
+         * 2. 若不合法，将编辑器复原
+         * @param ctx 
+         */
+        const _onTextEditorDisabled = (ctx: TextEditorCtx) => {
+            const num = parseInt(ctx.text)
+            if (`${num}` === ctx.text
+                && !isNaN(num)
+                && !inactiveYearIndexs.includes(num)) {
+                onEditYearIndex(activeYearIndex, num)
+            } else {
+                ctx.ele && (ctx.ele.textContent = `${activeYearIndex}`)
+            }
         }
 
         console.log('[YearsEditor Render]')
@@ -184,8 +188,7 @@ const YearsEditor2:
                     {inactiveYearIndexs.length === 0
                         ? <div className={styles.placeholder}>空</div>
                         : inactiveYearIndexs.map(index => (
-                            <div
-                                key={index}
+                            <div key={index}
                                 className={styles.year_option}
                                 onClick={_onYearOptionClick(index)}>
                                 {index}
@@ -193,12 +196,12 @@ const YearsEditor2:
                         ))}
                 </div>
                 <TextEditor
-                    text={`${activeYearIndex}`}
+                    defaultText={`${activeYearIndex}`}
                     className={styles.active_year}
-                    onChange={_onTextEditorChange}
-                    disabled={!editting}
+                    disabled={!editable}
                     onDoubleClick={_onActiveYearDoubleClick}
                     onClick={_onActiveYearClick}
+                    onDisabled={_onTextEditorDisabled}
                 />
                 <div className={styles.dropdown_button}
                     onClick={_onDropdownBtnClick}><div></div></div>
