@@ -1,6 +1,9 @@
 import React, { createRef, useEffect } from "react"
 import styles from "./TextEditor.module.css"
 
+/**
+ * `TextEditor` 向调用者提供的内部数据对象。
+ */
 class TextEditorCtx {
     ele
     text
@@ -32,23 +35,28 @@ const updateContentEditableDiv = (divEle: HTMLDivElement, text: string) => {
     updateContentEditableDivStyle(divEle)
 }
 
-const TextEditor2: React.FC<{
-    text?: string,
-    placeholder?: string,
-    className?: string,
-    disabled?: boolean,
-    onChange?: (ctx: TextEditorCtx, e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void,
-    onDoubleClick?: (ctx: TextEditorCtx, e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void,
-    onClick?: (ctx: TextEditorCtx, e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
-}> = ({
-    text,
-    placeholder,
-    className,
-    disabled,
-    onChange,
-    onDoubleClick,
-    onClick
-}) => {
+/**
+ * 使用单个 `div` 实现的可编辑的文本框
+ */
+const TextEditor
+    : React.FC<{
+        text?: string,
+        placeholder?: string,
+        className?: string,
+        disabled?: boolean,
+        onChange?: (ctx: TextEditorCtx, e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void,
+        onDoubleClick?: (ctx: TextEditorCtx, e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void,
+        onClick?: (ctx: TextEditorCtx, e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
+    }> = ({
+        text,
+        placeholder,
+        className,
+        disabled,
+        onChange,
+        onDoubleClick,
+        onClick
+    }) => {
+
         const eleRef = createRef<HTMLDivElement>()
 
         const _onInput = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -85,6 +93,6 @@ const TextEditor2: React.FC<{
         )
     }
 
-export default TextEditor2
+export default TextEditor
 
 export { TextEditorCtx }
