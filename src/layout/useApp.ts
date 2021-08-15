@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { Data, Diary, Month, Year } from "../types"
+import { createDownload } from "../utils/utils"
 
 const useApp = () => {
 
@@ -202,14 +203,23 @@ const useApp = () => {
     }
 
     const parseFile = (file: string) => {
-        return new Data()
+        return JSON.parse(file)
     }
+
     const onImportFile = (file: string) => {
         setData(parseFile(file))
     }
 
     const onExportFile = () => {
-
+        const content = new Blob([JSON.stringify(data)])
+        const now = new Date()
+        const y = now.getFullYear()
+        const mo = `0${now.getMonth() + 1}`.slice(-2)
+        const d = `0${now.getDate()}`.slice(-2)
+        const h = `0${now.getHours()}`.slice(-2)
+        const mi = `0${now.getMinutes()}`.slice(-2)
+        const s = `0${now.getSeconds()}`.slice(-2)
+        createDownload(`${data.bookName}-${y}${mo}${d}-${h}${mi}${s}.json`, content)
     }
 
     return {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { createRef, useEffect, useState } from "react";
 import TextEditor, { TextEditorCtx } from "../../../components/TextEditor/TextEditor";
 import { Data } from "../../../types";
 
@@ -16,6 +16,8 @@ const FileController:
         onImportFile,
         onExportFile
     }) => {
+
+        const inputEleRef = createRef<HTMLInputElement>()
 
         const [editable, setEditable] = useState(false)
 
@@ -55,13 +57,36 @@ const FileController:
             }
         }
 
-        const _onImport = () => {
-            onImportFile(JSON.stringify(new Data()))
-        }
-
         const _onExport = () => {
             onExportFile()
         }
+
+        const _onImport = () => {
+
+            if (!inputEleRef.current
+                || !inputEleRef.current.files
+                || inputEleRef.current.files?.length === 0) {
+                return
+            }
+
+            const file = inputEleRef.current.files[0]
+            const reader = new FileReader()
+
+            reader.onload = () => {
+                if (typeof reader.result === 'string') {
+                    onImportFile(reader.result || '')
+                }
+            }
+
+            reader.readAsText(file)
+        }
+
+        useEffect(() => {
+            inputEleRef.current?.addEventListener('change', _onImport)
+            return () => {
+                inputEleRef.current?.removeEventListener('change', _onImport)
+            }
+        })
 
         return (
             <div className={styles.file_controller}>
@@ -74,7 +99,10 @@ const FileController:
                     onDisabled={_onDisabled}
                 />
                 <label className={styles.import}>
-                    <input id="file_import" className={styles.file_input_control} type="file"></input>
+                    <input
+                        ref={inputEleRef}
+                        className={styles.file_input_control}
+                        type="file"></input>
                     <div>导入</div>
                 </label>
                 <div className={styles.export} onClick={_onExport}>导出</div>
