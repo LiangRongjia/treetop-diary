@@ -89,10 +89,13 @@ class FileData {
 }
 
 class Data {
+    bookName
     years
     constructor(
+        bookName: string = '新日记本',
         years: Year[] = [new Year((new Date).getFullYear())]
     ) {
+        this.bookName = bookName
         this.years = years
     }
 }

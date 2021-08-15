@@ -18,6 +18,7 @@ const useApp = () => {
     const activeDiary = diarys[activeDiaryIndex - 1] as Diary | undefined
 
     const yearIndexs = years.map(y => y.index)
+    const bookName = data.bookName
 
     /** 若当前年份不合法，选择合法的第一个年份 */
     if (years.length !== 0
@@ -196,6 +197,21 @@ const useApp = () => {
                     : ''
     }
 
+    const onBookNameChange = (newBookName: string) => {
+        setData({ ...data, bookName: newBookName })
+    }
+
+    const parseFile = (file: string) => {
+        return new Data()
+    }
+    const onImportFile = (file: string) => {
+        setData(parseFile(file))
+    }
+
+    const onExportFile = () => {
+
+    }
+
     return {
         yearIndexs,
         months,
@@ -205,12 +221,16 @@ const useApp = () => {
         activeYearIndex,
         editTarget,
         editorHandle,
+        bookName,
         onSelectYear,
         onSelectMonth,
         onSelectDiary,
         onEditYearIndex,
         onDeleteYear,
-        onAddYear
+        onAddYear,
+        onBookNameChange,
+        onImportFile,
+        onExportFile
     }
 }
 

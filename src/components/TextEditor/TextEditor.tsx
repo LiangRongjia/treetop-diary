@@ -8,13 +8,20 @@ class TextEditorCtx {
     evt
     ele
     text
+    defaultText
     constructor(
         ref: React.RefObject<HTMLDivElement>,
-        evt: React.MouseEvent<HTMLDivElement, MouseEvent> | null
+        evt: React.MouseEvent<HTMLDivElement, MouseEvent> | null,
+        defaultText: string
     ) {
         this.evt = evt
         this.ele = ref.current
         this.text = ref.current?.textContent || ''
+        this.defaultText = defaultText
+    }
+    setTextContent(text: string) {
+        this.ele && updateContentEditableDivText(this.ele, text)
+        this.ele && updateContentEditableDivStyle(this.ele)
     }
 }
 
@@ -81,23 +88,23 @@ const TextEditor:
 
         const _onInput = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
             eleRef.current && updateContentEditableDivStyle(eleRef.current)
-            onInput && onInput(new TextEditorCtx(eleRef, e))
+            onInput && onInput(new TextEditorCtx(eleRef, e, defaultText || ''))
         }
 
         const _onDoubleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-            onDoubleClick && onDoubleClick(new TextEditorCtx(eleRef, e))
+            onDoubleClick && onDoubleClick(new TextEditorCtx(eleRef, e, defaultText || ''))
         }
 
         const _onClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-            onClick && onClick(new TextEditorCtx(eleRef, e))
+            onClick && onClick(new TextEditorCtx(eleRef, e, defaultText || ''))
         }
 
         const _onDisabled = () => {
-            onDisabled && onDisabled(new TextEditorCtx(eleRef, null))
+            onDisabled && onDisabled(new TextEditorCtx(eleRef, null, defaultText || ''))
         }
 
         const _onAbled = () => {
-            onAbled && onAbled(new TextEditorCtx(eleRef, null))
+            onAbled && onAbled(new TextEditorCtx(eleRef, null, defaultText || ''))
         }
 
         /**

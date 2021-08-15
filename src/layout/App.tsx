@@ -19,12 +19,16 @@ const App = () => {
         activeMonthIndex,
         editTarget,
         editorHandle,
+        bookName,
         onSelectYear,
         onSelectMonth,
         onSelectDiary,
         onEditYearIndex,
         onDeleteYear,
-        onAddYear
+        onAddYear,
+        onBookNameChange,
+        onImportFile,
+        onExportFile
     } = useApp()
 
     console.log('[App Render]')
@@ -34,10 +38,14 @@ const App = () => {
             <Header
                 activeYearIndex={activeYearIndex}
                 yearIndexs={yearIndexs}
+                bookName={bookName}
                 onSelectYear={onSelectYear}
                 onEditYearIndex={onEditYearIndex}
                 onDeleteYear={onDeleteYear}
                 onAddYear={onAddYear}
+                onBookNameChange={onBookNameChange}
+                onImportFile={onImportFile}
+                onExportFile={onExportFile}
             />
             <MonthList
                 months={months}

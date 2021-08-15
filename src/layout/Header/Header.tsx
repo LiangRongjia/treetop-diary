@@ -1,32 +1,32 @@
 import React, { createRef } from 'react'
+import FileController from './FileController/FileController'
 import styles from './Header.module.css'
 import YearsEditor from './YearsEditor/YearsEditor'
 
 const Header:
     React.FC<{
+        bookName: string,
         activeYearIndex: number,
         yearIndexs: number[],
         onSelectYear: (newYearIndex: number) => void,
         onEditYearIndex: (oldIndex: number, newIndex: number) => void,
         onDeleteYear: (index: number) => void,
-        onAddYear: (yearIndex: number) => void
+        onAddYear: (yearIndex: number) => void,
+        onBookNameChange: (newFileName: string) => void,
+        onImportFile: (file: string) => void,
+        onExportFile: () => void
     }> = ({
+        bookName,
         activeYearIndex,
         yearIndexs,
         onSelectYear,
         onEditYearIndex,
         onDeleteYear,
-        onAddYear
+        onAddYear,
+        onBookNameChange,
+        onImportFile,
+        onExportFile
     }) => {
-
-        const selector = createRef<HTMLSelectElement>()
-
-        const onChange = () => {
-            if (selector.current === null) return
-            const optionIndex = selector.current.selectedIndex
-            const yearIndex = parseInt(selector.current.options[optionIndex].value)
-            onSelectYear(yearIndex)
-        }
 
         console.log('[Header Render]')
 
@@ -39,6 +39,12 @@ const Header:
                     onAddYear={onAddYear}
                     onDeleteYear={onDeleteYear}
                     onSelectYear={onSelectYear}
+                />
+                <FileController
+                    fileName={bookName}
+                    onFileNameChange={onBookNameChange}
+                    onImportFile={onImportFile}
+                    onExportFile={onExportFile}
                 />
             </div>
         )
