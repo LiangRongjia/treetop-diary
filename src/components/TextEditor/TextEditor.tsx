@@ -50,7 +50,7 @@ const updateContentEditableDivText = (divEle: HTMLDivElement, text: string) => {
  * 1. `defaultText` 变更，将重置编辑器，实际显示的 `textContent` 与 `defaultText` 同步；
  * 2. 用户输入将导致 `textContent` 与 `defaultText` 不一致；
  * 3. `disabled` 属性将阻止用户输入，冻结当前 `textContent`，
- *    但若 `defaultText` 更，仍然将导致 `textContent` 与其同步。
+ *    但若 `defaultText` 更新，仍然将导致 `textContent` 与其同步。
  */
 const TextEditor:
     React.FC<{

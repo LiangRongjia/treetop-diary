@@ -8,7 +8,7 @@ const TagsEditor:
         tags: string[]
         onTagsChange: (newTags: string[]) => void
     }> = ({
-        tags: tags,
+        tags,
         onTagsChange
     }) => {
 
@@ -33,6 +33,7 @@ const TagsEditor:
                 {tags.map((tag, index) => (
                     <TagEditor
                         key={index}
+                        target={`${tags.length}/${index}`}
                         text={tag}
                         onChange={_onEditTag(index)}
                         onDelete={_onDeleteTag(index)}
