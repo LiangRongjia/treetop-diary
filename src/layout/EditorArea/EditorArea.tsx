@@ -3,7 +3,7 @@ import styles from './EditorArea.module.css'
 import TitleEditor from './TitleEditor/TitleEditor'
 import RichTextEditor from '../../components/RichTextEditor/RichTextEditor'
 import TagsEditor from './TagsEditor/TagsEditor'
-import CurrentPath from '../CurrentPath/CurrentPath'
+import CurrentPath from './CurrentPath/CurrentPath'
 
 const EditorArea:
     React.FC<{
