@@ -1,4 +1,4 @@
-import { Data } from "../types"
+import { Data, Month, Year } from "../types"
 import { createDownload } from "../utils/utils"
 
 /**
@@ -11,7 +11,22 @@ import { createDownload } from "../utils/utils"
  * 版本名常量。
  */
 const VER = {
-    V1_JSON: 'V1_JSON'
+    V1_JSON: 'V1_JSON',
+    V2_JSON: 'V2_JSON'
+}
+
+/**
+ * 获取当前时间字符串，格式 `yyyymmdd-hhmmss`
+ */
+const getNowStr = () => {
+    const now = new Date()
+    const y = now.getFullYear()
+    const mo = `0${now.getMonth() + 1}`.slice(-2)
+    const d = `0${now.getDate()}`.slice(-2)
+    const h = `0${now.getHours()}`.slice(-2)
+    const mi = `0${now.getMinutes()}`.slice(-2)
+    const s = `0${now.getSeconds()}`.slice(-2)
+    return `${y}${mo}${d}-${h}${mi}${s}`
 }
 
 /**
@@ -36,29 +51,98 @@ const readVersion = (file: string) => {
 }
 
 /**
- * 导入算法 V1_JSON：`json` 格式，无加密，无算法版本标记。
- * @param file 
+ * 导入算法 `V1_JSON`：`json` 格式，无加密，无算法版本标记。
+ * @param dataStr 
  * @returns 
  */
-const importV1 = (file: string) => {
-    const data = JSON.parse(file) as Data
+const parseData_V1_JSON = (dataStr: string) => {
+    const data = JSON.parse(dataStr) as Data
     return data
 }
 
 /**
- * 导出算法 V1_JSON：`json` 格式，无加密，无算法版本标记。
+ * 导出算法 `V1_JSON`：`json` 格式，无加密，无算法版本标记。
  * @param data 
  */
-const exportV1 = (data: Data) => {
-    const content = new Blob([JSON.stringify(data)])
-    const now = new Date()
-    const y = now.getFullYear()
-    const mo = `0${now.getMonth() + 1}`.slice(-2)
-    const d = `0${now.getDate()}`.slice(-2)
-    const h = `0${now.getHours()}`.slice(-2)
-    const mi = `0${now.getMinutes()}`.slice(-2)
-    const s = `0${now.getSeconds()}`.slice(-2)
-    createDownload(`${data.bookName}-${y}${mo}${d}-${h}${mi}${s}.json`, content)
+const toFileStr_V1_JSON = (data: Data) => {
+    const fileBlob = new Blob([JSON.stringify(data)])
+    return fileBlob
+}
+
+/**
+ * 导入算法 `V2_JSON`：丢弃空值
+ * @param dataStr 
+ * @returns 
+ */
+const parseData_V2_JSON = (dataStr: string) => {
+
+    const compressedData = JSON.parse(dataStr) as Data
+
+    const completeData = {
+        ...compressedData,
+        years: compressedData.years.map(year => {
+            const newYear = new Year(
+                year.index,
+                year.title,
+                year.tags,
+                year.summary
+            )
+            year.months.map(month => {
+                const newMonth = new Month(
+                    month.yearIndex,
+                    month.index,
+                    month.title,
+                    month.tags,
+                    month.summary
+                )
+                month.diarys.forEach(diary => {
+                    newMonth.diarys[diary.index - 1] = diary
+                })
+                return newMonth
+            }).forEach(month => {
+                newYear.months[month.index - 1] = month
+            })
+            return newYear
+        })
+    }
+
+    return completeData
+}
+
+/**
+ * 导出算法 `V2_JSON`：丢弃空值
+ * @param file 
+ * @returns 
+ */
+const toFileStr_V2_JSON = (data: Data) => {
+
+    const dataCopy = JSON.parse(JSON.stringify(data)) as Data
+
+    const compressedData = {
+        ...dataCopy,
+        years: dataCopy.years.map(year => ({
+            ...year,
+            months: year.months.map(month => ({
+                ...month,
+                diarys: month.diarys.filter(diary =>
+                    !(diary.content.data === ''
+                        && diary.tags.length === 0
+                        && diary.title === ''
+                    )
+                )
+            })).filter(month =>
+                !(month.diarys.length === 0
+                    && month.summary.data === ''
+                    && month.tags.length === 0
+                    && month.title === ''
+                )
+            )
+        }))
+    }
+
+    const fileBlob = new Blob([VER.V2_JSON, ';', JSON.stringify(compressedData)])
+
+    return fileBlob
 }
 
 /**
@@ -69,7 +153,9 @@ const exportV1 = (data: Data) => {
 const importFile = (file: string) => {
     switch (readVersion(file)) {
         case VER.V1_JSON:
-            return importV1(file)
+            return parseData_V1_JSON(file)
+        case VER.V2_JSON:
+            return parseData_V2_JSON(file.slice(VER.V2_JSON.length + 1))
         default:
             return new Data()
     }
@@ -80,7 +166,8 @@ const importFile = (file: string) => {
  * @param data 
  */
 const exportFile = (data: Data) => {
-    exportV1(data)
+    const content = toFileStr_V2_JSON(data)
+    createDownload(`${data.bookName}-${getNowStr()}.ttd`, content)
 }
 
 export {
