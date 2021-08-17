@@ -4,8 +4,5 @@
     padding: 16px;
     min-height: 36px;
     cursor: text;
-}
-
-.title_editor:focus-visible {
     outline: none;
 }
