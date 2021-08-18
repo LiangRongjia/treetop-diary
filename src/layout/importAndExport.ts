@@ -1,5 +1,8 @@
-import { Data, Month, Year } from "../types"
-import { createDownload } from "../utils/utils"
+/**
+ * 该文件导出关于文件导入导出的算法
+ */
+import { Data } from "../types"
+import { createDownload, restoreData, slimData } from "../utils/utils"
 
 /**
  * 文件算法版本标识符约定：
@@ -75,38 +78,8 @@ const toFileStr_V1_JSON = (data: Data) => {
  * @returns 
  */
 const parseData_V2_JSON = (dataStr: string) => {
-
     const compressedData = JSON.parse(dataStr) as Data
-
-    const completeData = {
-        ...compressedData,
-        years: compressedData.years.map(year => {
-            const newYear = new Year(
-                year.index,
-                year.title,
-                year.tags,
-                year.summary
-            )
-            year.months.map(month => {
-                const newMonth = new Month(
-                    month.yearIndex,
-                    month.index,
-                    month.title,
-                    month.tags,
-                    month.summary
-                )
-                month.diarys.forEach(diary => {
-                    newMonth.diarys[diary.index - 1] = diary
-                })
-                return newMonth
-            }).forEach(month => {
-                newYear.months[month.index - 1] = month
-            })
-            return newYear
-        })
-    }
-
-    return completeData
+    return restoreData(compressedData)
 }
 
 /**
@@ -115,33 +88,8 @@ const parseData_V2_JSON = (dataStr: string) => {
  * @returns 
  */
 const toFileStr_V2_JSON = (data: Data) => {
-
-    const dataCopy = JSON.parse(JSON.stringify(data)) as Data
-
-    const compressedData = {
-        ...dataCopy,
-        years: dataCopy.years.map(year => ({
-            ...year,
-            months: year.months.map(month => ({
-                ...month,
-                diarys: month.diarys.filter(diary =>
-                    !(diary.content.data === ''
-                        && diary.tags.length === 0
-                        && diary.title === ''
-                    )
-                )
-            })).filter(month =>
-                !(month.diarys.length === 0
-                    && month.summary.data === ''
-                    && month.tags.length === 0
-                    && month.title === ''
-                )
-            )
-        }))
-    }
-
-    const fileBlob = new Blob([VER.V2_JSON, ';', JSON.stringify(compressedData)])
-
+    const slimmedData = slimData(data)
+    const fileBlob = new Blob([VER.V2_JSON, ';', JSON.stringify(slimmedData)])
     return fileBlob
 }
 

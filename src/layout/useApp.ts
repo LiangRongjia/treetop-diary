@@ -1,6 +1,5 @@
 import { useState } from "react"
 import { Data, Diary, Month, Year } from "../types"
-import { createDownload } from "../utils/utils"
 import { exportFile, importFile } from "./importAndExport"
 
 const useApp = () => {
