@@ -1,7 +1,4 @@
 .header {
-    position: sticky;
-    top: 0;
-    left: 0;
     grid-row: 1/2;
     grid-column: 1/4;
     background-color: #0277bd;
