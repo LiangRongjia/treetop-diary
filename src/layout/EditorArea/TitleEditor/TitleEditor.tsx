@@ -6,12 +6,12 @@ import styles from "./TitleEditor.module.css"
 
 const TitleEditor:
     React.FC<{
-        target: string,
+        handle:number,
         title: string,
         placeholder: string,
         onChange: (newTitle: string) => void
     }> = ({
-        target,
+        handle,
         title,
         onChange,
         placeholder
@@ -27,13 +27,13 @@ const TitleEditor:
         /** 当 `target` 变化时，更新原始文本，相当于重置编辑器 */
         useEffect(() => {
             setOriginalTitle(title)
-        }, [target])
+        }, [handle])
 
         console.log('[TitleEditor Render]')
 
         return (
             <TextEditor
-                key={target}
+                key={handle}
                 defaultText={originalTitle}
                 placeholder={placeholder || ''}
                 className={styles.title_editor}

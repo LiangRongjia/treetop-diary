@@ -204,6 +204,7 @@ const useApp = () => {
 
     const onImportFile = (file: string) => {
         setData(importFile(file))
+        setEditorHandle(pre => pre + 1)
     }
 
     const onExportFile = () => {

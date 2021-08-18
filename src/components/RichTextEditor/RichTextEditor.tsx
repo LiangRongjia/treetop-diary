@@ -12,7 +12,7 @@ import 'react-quill/dist/quill.snow.css'
  */
 const RichTextEditor:
     React.FC<{
-        handle: number,
+        handle?: number,
         initialHtmlContent?: string,
         className?: string,
         onChange?: (curContent: string) => void
@@ -32,7 +32,7 @@ const RichTextEditor:
                 className={`${styles.rich_text_editor} ${className}`}
                 key={handle}
                 theme="snow"
-                value={initialHtmlContent}
+                defaultValue={initialHtmlContent}
                 onChange={_onChange}
             />
         )

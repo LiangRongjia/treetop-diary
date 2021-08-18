@@ -40,7 +40,7 @@ const EditorArea:
                     date={date}
                 />
                 <TitleEditor
-                    target={`${year}/${month}/${date}`}
+                    handle={handle}
                     title={title}
                     onChange={onTitleChange}
                     placeholder={titleEditorPlaceholder}
