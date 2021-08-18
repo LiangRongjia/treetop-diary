@@ -63,19 +63,27 @@ const FileController:
 
         const _onImport = () => {
 
-            if (!inputEleRef.current
-                || !inputEleRef.current.files
-                || inputEleRef.current.files?.length === 0) {
-                return
-            }
+            if (!inputEleRef.current) return
 
-            const file = inputEleRef.current.files[0]
+            /**
+             * 下面清空 input 元素的值使用 ref.current 的话会为 null，故用局部变量引用 input
+             */
+            const inputEle = inputEleRef.current
+
+            if (!inputEle.files || inputEle.files?.length === 0) return
+
+            const file = inputEle.files[0]
+
             const reader = new FileReader()
 
             reader.onload = () => {
                 if (typeof reader.result === 'string') {
                     onImportFile(reader.result || '')
                 }
+                /**
+                 * 清空当前 input 元素的值，防止同路径文件不能重新导入
+                 */
+                inputEle && (inputEle.value = '')
             }
 
             reader.readAsText(file)
