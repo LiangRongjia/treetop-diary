@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import styles from './App.module.css'
 
@@ -7,6 +7,7 @@ import MonthList from './MonthList/MonthList'
 import DiaryList from './DiaryList/DiaryList'
 import EditorArea from './EditorArea/EditorArea'
 import useApp from './useApp'
+import PasswordDialog from './PasswordDialog/PasswordDialog'
 
 const App = () => {
 
@@ -20,6 +21,7 @@ const App = () => {
         editTarget,
         editorHandle,
         bookName,
+        passwordDialogShow,
         onSelectYear,
         onSelectMonth,
         onSelectDiary,
@@ -28,7 +30,9 @@ const App = () => {
         onAddYear,
         onBookNameChange,
         onImportFile,
-        onExportFile
+        onExportFile,
+        verifyPassword,
+        hidePasswordDialog
     } = useApp()
 
     console.log('[App Render]')
@@ -72,6 +76,11 @@ const App = () => {
                 onContentChange={editTarget.onContentChange}
                 onTagsChange={editTarget.onTagsChange}
                 onTitleChange={editTarget.onTitleChange}
+            />
+            <PasswordDialog
+                isShow={passwordDialogShow}
+                hide={hidePasswordDialog}
+                verify={verifyPassword}
             />
         </div >
     )

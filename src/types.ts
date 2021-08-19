@@ -91,12 +91,15 @@ class FileData {
 class Data {
     bookName
     years
+    password
     constructor(
         bookName: string = '新日记本',
-        years: Year[] = [new Year((new Date).getFullYear())]
+        years: Year[] = [new Year((new Date).getFullYear())],
+        password: string = ''
     ) {
         this.bookName = bookName
         this.years = years
+        this.password = password
     }
 }
 

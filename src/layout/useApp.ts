@@ -10,6 +10,9 @@ const useApp = () => {
     const [activeMonthIndex, setActiveMonthIndex] = useState(0)
     const [activeDiaryIndex, setActiveDiaryIndex] = useState(0)
     const [editorHandle, setEditorHandle] = useState(0)
+    const [passwordDialogShow, setPasswordDialogShow] = useState(true)
+
+    const [importedDataBuffer, setImportedDataBuffer] = useState(new Data())
 
     const years = data.years || []
     const activeYear = years.filter(y => y.index === activeYearIndex).shift()
@@ -203,13 +206,31 @@ const useApp = () => {
     }
 
     const onImportFile = (file: string) => {
-        setData(importFile(file))
-        setEditorHandle(pre => pre + 1)
+        const newData = importFile(file)
+        setImportedDataBuffer(newData)
+        setPasswordDialogShow(true)
+        console.log(newData.password)
     }
 
     const onExportFile = () => {
         exportFile(data)
     }
+
+    const hidePasswordDialog = () => {
+        setPasswordDialogShow(false)
+    }
+
+    const verifyPassword = (password: string) => {
+        if (importedDataBuffer.password === password) {
+            setData({ ...importedDataBuffer })
+            setEditorHandle(pre => pre + 1)
+            setImportedDataBuffer(new Data())
+            console.log(importedDataBuffer.password, password)
+        }
+        console.log(importedDataBuffer.password, password)
+        hidePasswordDialog()
+    }
+
 
     return {
         yearIndexs,
@@ -221,6 +242,7 @@ const useApp = () => {
         editTarget,
         editorHandle,
         bookName,
+        passwordDialogShow,
         onSelectYear,
         onSelectMonth,
         onSelectDiary,
@@ -229,7 +251,9 @@ const useApp = () => {
         onAddYear,
         onBookNameChange,
         onImportFile,
-        onExportFile
+        onExportFile,
+        verifyPassword,
+        hidePasswordDialog
     }
 }
 

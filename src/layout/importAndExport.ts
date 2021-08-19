@@ -15,7 +15,8 @@ import { createDownload, restoreData, slimData } from "../utils/utils"
  */
 const VER = {
     V1_JSON: 'V1_JSON',
-    V2_JSON: 'V2_JSON'
+    V2_JSON: 'V2_JSON',
+    V3_PASSWORD: 'V3_PASSWORD'
 }
 
 /**
@@ -53,13 +54,18 @@ const readVersion = (file: string) => {
     return verChars.join('')
 }
 
+// =====================================================
+
 /**
  * 导入算法 `V1_JSON`：`json` 格式，无加密，无算法版本标记。
  * @param dataStr 
  * @returns 
  */
 const parseData_V1_JSON = (dataStr: string) => {
-    const data = JSON.parse(dataStr) as Data
+    const data = {
+        ...JSON.parse(dataStr),
+        password: ''
+    } as Data
     return data
 }
 
@@ -72,6 +78,8 @@ const toFileStr_V1_JSON = (data: Data) => {
     return fileBlob
 }
 
+// =====================================================
+
 /**
  * 导入算法 `V2_JSON`：丢弃空值
  * @param dataStr 
@@ -79,7 +87,11 @@ const toFileStr_V1_JSON = (data: Data) => {
  */
 const parseData_V2_JSON = (dataStr: string) => {
     const compressedData = JSON.parse(dataStr) as Data
-    return restoreData(compressedData)
+    const data = {
+        ...restoreData(compressedData),
+        password: ''
+    }
+    return data
 }
 
 /**
@@ -93,6 +105,31 @@ const toFileStr_V2_JSON = (data: Data) => {
     return fileBlob
 }
 
+// =====================================================
+
+/**
+ * 导入算法 `V3_PASSWORD`：丢弃空值
+ * @param dataStr 
+ * @returns 
+ */
+const parseData_V3_PASSWORD = (dataStr: string) => {
+    const compressedData = JSON.parse(dataStr) as Data
+    const data = restoreData(compressedData)
+    return data
+}
+
+/**
+ * 导出算法 `V3_PASSWORD`：丢弃空值
+ * @param file 
+ * @returns 
+ */
+const toFileStr_V3_PASSWORD = (data: Data) => {
+    const slimmedData = slimData(data)
+    const fileBlob = new Blob([VER.V3_PASSWORD, ';', JSON.stringify(slimmedData)])
+    return fileBlob
+}
+// =====================================================
+
 /**
  * 整合各版本的导入算法，识别文件算法版本，以相应算法读取。
  * @param file 
@@ -104,6 +141,8 @@ const importFile = (file: string) => {
             return parseData_V1_JSON(file)
         case VER.V2_JSON:
             return parseData_V2_JSON(file.slice(VER.V2_JSON.length + 1))
+        case VER.V3_PASSWORD:
+            return parseData_V3_PASSWORD(file.slice(VER.V3_PASSWORD.length + 1))
         default:
             return new Data()
     }
@@ -114,7 +153,7 @@ const importFile = (file: string) => {
  * @param data 
  */
 const exportFile = (data: Data) => {
-    const content = toFileStr_V2_JSON(data)
+    const content = toFileStr_V3_PASSWORD(data)
     createDownload(`${data.bookName}-${getNowStr()}.ttd`, content)
 }
 
