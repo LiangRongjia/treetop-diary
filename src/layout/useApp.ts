@@ -10,7 +10,7 @@ const useApp = () => {
     const [activeMonthIndex, setActiveMonthIndex] = useState(0)
     const [activeDiaryIndex, setActiveDiaryIndex] = useState(0)
     const [editorHandle, setEditorHandle] = useState(0)
-    const [passwordDialogShow, setPasswordDialogShow] = useState(true)
+    const [passwordDialogShow, setPasswordDialogShow] = useState(false)
 
     const [importedDataBuffer, setImportedDataBuffer] = useState(new Data())
 
