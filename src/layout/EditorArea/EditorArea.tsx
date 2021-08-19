@@ -46,6 +46,7 @@ const EditorArea:
                     placeholder={titleEditorPlaceholder}
                 />
                 <TagsEditor
+                    key={handle}
                     tags={tags}
                     onTagsChange={onTagsChange}
                 />
