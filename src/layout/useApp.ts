@@ -209,7 +209,6 @@ const useApp = () => {
         const newData = importFile(file)
         setImportedDataBuffer(newData)
         setPasswordDialogShow(true)
-        console.log(newData.password)
     }
 
     const onExportFile = () => {
@@ -225,9 +224,7 @@ const useApp = () => {
             setData({ ...importedDataBuffer })
             setEditorHandle(pre => pre + 1)
             setImportedDataBuffer(new Data())
-            console.log(importedDataBuffer.password, password)
         }
-        console.log(importedDataBuffer.password, password)
         hidePasswordDialog()
     }
 
