@@ -1,5 +1,4 @@
 import React, { createRef } from "react"
-
 import { PrimaryButton, DefaultButton } from '@fluentui/react/lib/Button'
 import Dialog from "../../components/Dialog/Dialog"
 
@@ -18,6 +17,7 @@ const PasswordDialog:
 
         const _onOkClick = () => {
             inputEleRef.current && verify(inputEleRef.current.value)
+            hide()
         }
 
         const _onCancelClick = () => {

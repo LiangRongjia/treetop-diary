@@ -8,6 +8,7 @@ import DiaryList from './DiaryList/DiaryList'
 import EditorArea from './EditorArea/EditorArea'
 import useApp from './useApp'
 import PasswordDialog from './PasswordDialog/PasswordDialog'
+import ExportDialog from './ExportDialog/ExportDialog'
 
 const App = () => {
 
@@ -22,6 +23,8 @@ const App = () => {
         editorHandle,
         bookName,
         passwordDialogShow,
+        password,
+        exportDialogShow,
         onSelectYear,
         onSelectMonth,
         onSelectDiary,
@@ -30,9 +33,11 @@ const App = () => {
         onAddYear,
         onBookNameChange,
         onImportFile,
-        onExportFile,
+        onHeaderExportFile,
         verifyPassword,
-        hidePasswordDialog
+        hidePasswordDialog,
+        hideExportDialog,
+        dialogExportFile
     } = useApp()
 
     console.log('[App Render]')
@@ -49,7 +54,7 @@ const App = () => {
                 onAddYear={onAddYear}
                 onBookNameChange={onBookNameChange}
                 onImportFile={onImportFile}
-                onExportFile={onExportFile}
+                onExportFile={onHeaderExportFile}
             />
             <MonthList
                 months={months}
@@ -81,6 +86,12 @@ const App = () => {
                 isShow={passwordDialogShow}
                 hide={hidePasswordDialog}
                 verify={verifyPassword}
+            />
+            <ExportDialog
+                defaultPassword={password}
+                show={exportDialogShow}
+                hide={hideExportDialog}
+                onExport={dialogExportFile}
             />
         </div>
     )

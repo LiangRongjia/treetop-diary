@@ -11,6 +11,7 @@ const useApp = () => {
     const [activeDiaryIndex, setActiveDiaryIndex] = useState(0)
     const [editorHandle, setEditorHandle] = useState(0)
     const [passwordDialogShow, setPasswordDialogShow] = useState(false)
+    const [exportDialogShow, setExportDialogShow] = useState(false)
 
     const [importedDataBuffer, setImportedDataBuffer] = useState(new Data())
 
@@ -211,8 +212,8 @@ const useApp = () => {
         setPasswordDialogShow(true)
     }
 
-    const onExportFile = () => {
-        exportFile(data)
+    const onHeaderExportFile = () => {
+        setExportDialogShow(true)
     }
 
     const hidePasswordDialog = () => {
@@ -225,9 +226,20 @@ const useApp = () => {
             setEditorHandle(pre => pre + 1)
             setImportedDataBuffer(new Data())
         }
-        hidePasswordDialog()
     }
 
+    const hideExportDialog = () => {
+        setExportDialogShow(false)
+    }
+
+    const dialogExportFile = (password: string) => {
+        const newData = {
+            ...data,
+            password
+        }
+        setData(newData)
+        exportFile(newData)
+    }
 
     return {
         yearIndexs,
@@ -240,6 +252,8 @@ const useApp = () => {
         editorHandle,
         bookName,
         passwordDialogShow,
+        password: data.password,
+        exportDialogShow,
         onSelectYear,
         onSelectMonth,
         onSelectDiary,
@@ -248,9 +262,11 @@ const useApp = () => {
         onAddYear,
         onBookNameChange,
         onImportFile,
-        onExportFile,
+        onHeaderExportFile,
         verifyPassword,
-        hidePasswordDialog
+        hidePasswordDialog,
+        hideExportDialog,
+        dialogExportFile
     }
 }
 
