@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import styles from './App.module.css'
 
@@ -82,7 +82,7 @@ const App = () => {
                 hide={hidePasswordDialog}
                 verify={verifyPassword}
             />
-        </div >
+        </div>
     )
 }
 
