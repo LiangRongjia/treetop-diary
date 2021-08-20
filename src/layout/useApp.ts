@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Data, Diary, Month, Year } from "../types"
-import { exportFile, importFile } from "./importAndExport"
+import { exportFile, parseFile } from "./importAndExport"
 
 const useApp = () => {
 
@@ -13,7 +13,7 @@ const useApp = () => {
     const [passwordDialogShow, setPasswordDialogShow] = useState(false)
     const [exportDialogShow, setExportDialogShow] = useState(false)
 
-    const [importedDataBuffer, setImportedDataBuffer] = useState(new Data())
+    const [fileBuffer, setFileBuffer] = useState('')
 
     const years = data.years || []
     const activeYear = years.filter(y => y.index === activeYearIndex).shift()
@@ -207,8 +207,7 @@ const useApp = () => {
     }
 
     const onImportFile = (file: string) => {
-        const newData = importFile(file)
-        setImportedDataBuffer(newData)
+        setFileBuffer(file)
         setPasswordDialogShow(true)
     }
 
@@ -221,11 +220,17 @@ const useApp = () => {
     }
 
     const verifyPassword = (password: string) => {
-        if (importedDataBuffer.password === password) {
-            setData({ ...importedDataBuffer })
-            setEditorHandle(pre => pre + 1)
-            setImportedDataBuffer(new Data())
+        try {
+            const newData = parseFile(fileBuffer, password)
+            if (typeof newData === 'object'
+                && password === newData.password) {
+                setData(newData)
+            }
+        } catch (e) {
+            setData(new Data())
         }
+        setEditorHandle(pre => pre + 1)
+        setFileBuffer('')
     }
 
     const hideExportDialog = () => {

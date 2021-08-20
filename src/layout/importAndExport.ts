@@ -3,6 +3,8 @@
  */
 import { Data } from "../types"
 import { createDownload, restoreData, slimData } from "../utils/utils"
+import RC4 from 'crypto-js/rc4'
+import { enc } from "crypto-js"
 
 /**
  * 文件算法版本标识符约定：
@@ -16,7 +18,8 @@ import { createDownload, restoreData, slimData } from "../utils/utils"
 const VER = {
     V1_JSON: 'V1_JSON',
     V2_JSON: 'V2_JSON',
-    V3_PASSWORD: 'V3_PASSWORD'
+    V3_PASSWORD: 'V3_PASSWORD',
+    V4_RC4: 'V4_RC4'
 }
 
 /**
@@ -96,7 +99,7 @@ const parseData_V2_JSON = (dataStr: string) => {
 
 /**
  * 导出算法 `V2_JSON`：丢弃空值
- * @param file 
+ * @param data 
  * @returns 
  */
 const toFileStr_V2_JSON = (data: Data) => {
@@ -120,7 +123,7 @@ const parseData_V3_PASSWORD = (dataStr: string) => {
 
 /**
  * 导出算法 `V3_PASSWORD`：丢弃空值
- * @param file 
+ * @param data 
  * @returns 
  */
 const toFileStr_V3_PASSWORD = (data: Data) => {
@@ -128,6 +131,31 @@ const toFileStr_V3_PASSWORD = (data: Data) => {
     const fileBlob = new Blob([VER.V3_PASSWORD, ';', JSON.stringify(slimmedData)])
     return fileBlob
 }
+
+// =====================================================
+
+/**
+ * 导入算法 `V4_RC4`：使用 `RC4` 加密文件
+ */
+const parseData_V4_RC4 = (dataStr: string, password: string) => {
+    const decryptoData = RC4.decrypt(dataStr, password).toString(enc.Utf8)
+    const compressedData = JSON.parse(decryptoData) as Data
+    const data = restoreData(compressedData)
+    return data
+}
+
+/**
+ * 导出算法 `V4_RC4`：使用 `RC4` 加密文件
+ * @param file 
+ * @returns 
+ */
+const toFileStr_V4_RC4 = (data: Data) => {
+    const slimmedData = slimData(data)
+    const encryptoData = RC4.encrypt(JSON.stringify(slimmedData), data.password).toString()
+    const fileBlob = new Blob([VER.V4_RC4, ';', encryptoData])
+    return fileBlob
+}
+
 // =====================================================
 
 /**
@@ -135,7 +163,7 @@ const toFileStr_V3_PASSWORD = (data: Data) => {
  * @param file 
  * @returns 
  */
-const importFile = (file: string) => {
+const parseFile = (file: string, password: string) => {
     switch (readVersion(file)) {
         case VER.V1_JSON:
             return parseData_V1_JSON(file)
@@ -143,6 +171,8 @@ const importFile = (file: string) => {
             return parseData_V2_JSON(file.slice(VER.V2_JSON.length + 1))
         case VER.V3_PASSWORD:
             return parseData_V3_PASSWORD(file.slice(VER.V3_PASSWORD.length + 1))
+        case VER.V4_RC4:
+            return parseData_V4_RC4(file.slice(VER.V4_RC4.length + 1), password)
         default:
             return new Data()
     }
@@ -153,11 +183,11 @@ const importFile = (file: string) => {
  * @param data 
  */
 const exportFile = (data: Data) => {
-    const content = toFileStr_V3_PASSWORD(data)
-    createDownload(`${data.bookName}-${getNowStr()}.ttd`, content)
+    const content = toFileStr_V4_RC4(data)
+    createDownload(`${data.bookName}-${getNowStr()}.diary`, content)
 }
 
 export {
-    importFile,
-    exportFile
+    exportFile,
+    parseFile
 }
