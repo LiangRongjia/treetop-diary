@@ -3,7 +3,7 @@ import React from 'react'
 import styles from './App.module.css'
 
 import Header from './Header/Header'
-import MonthList from './MonthList/MonthList'
+import MonthList, { MonthListClass } from './MonthList/MonthList'
 import DiaryList from './DiaryList/DiaryList'
 import EditorArea from './EditorArea/EditorArea'
 import useApp from './useApp'
@@ -56,11 +56,16 @@ const App = () => {
                 onImportFile={onImportFile}
                 onExportFile={onHeaderExportFile}
             />
-            <MonthList
+            {/* <MonthList
                 months={months}
                 activeMonthIndex={activeMonthIndex}
                 onSelectMonth={onSelectMonth}
-            />
+            /> */}
+            {new MonthListClass()
+                .activeMonthIndex(activeMonthIndex)
+                .months(months)
+                .onSelectMonth(onSelectMonth)
+                .done()}
             {activeMonthIndex === 0
                 ? undefined
                 : <DiaryList
