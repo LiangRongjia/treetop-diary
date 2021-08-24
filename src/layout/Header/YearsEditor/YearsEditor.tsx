@@ -179,8 +179,6 @@ const YearsEditor2:
             }
         }
 
-        console.log('[YearsEditor Render]')
-
         return (
             <div className={styles.years_editor}>
                 <div className={styles.year_options_group}

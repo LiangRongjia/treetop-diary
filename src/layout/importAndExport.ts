@@ -19,7 +19,8 @@ const VER = {
     V1_JSON: 'V1_JSON',
     V2_JSON: 'V2_JSON',
     V3_PASSWORD: 'V3_PASSWORD',
-    V4_RC4: 'V4_RC4'
+    V4_RC4: 'V4_RC4',
+    V5_RC4: 'V5_RC4'
 }
 
 /**
@@ -91,7 +92,8 @@ const toFileStr_V1_JSON = (data: Data) => {
 const parseData_V2_JSON = (dataStr: string) => {
     const compressedData = JSON.parse(dataStr) as Data
     const data = {
-        ...restoreData(compressedData),
+        // ...restoreData(compressedData),
+        ...compressedData,
         password: ''
     }
     return data
@@ -117,7 +119,8 @@ const toFileStr_V2_JSON = (data: Data) => {
  */
 const parseData_V3_PASSWORD = (dataStr: string) => {
     const compressedData = JSON.parse(dataStr) as Data
-    const data = restoreData(compressedData)
+    // const data = restoreData(compressedData)
+    const data = compressedData
     return data
 }
 
@@ -140,7 +143,8 @@ const toFileStr_V3_PASSWORD = (data: Data) => {
 const parseData_V4_RC4 = (dataStr: string, password: string) => {
     const decryptoData = RC4.decrypt(dataStr, password).toString(enc.Utf8)
     const compressedData = JSON.parse(decryptoData) as Data
-    const data = restoreData(compressedData)
+    // const data = restoreData(compressedData)
+    const data = compressedData
     return data
 }
 
@@ -153,6 +157,30 @@ const toFileStr_V4_RC4 = (data: Data) => {
     const slimmedData = slimData(data)
     const encryptoData = RC4.encrypt(JSON.stringify(slimmedData), data.password).toString()
     const fileBlob = new Blob([VER.V4_RC4, ';', encryptoData])
+    return fileBlob
+}
+
+// =====================================================
+
+/**
+ * 导入算法 `V5_RC4`：使用 `RC4` 加密文件
+ */
+const parseData_V5_RC4 = (dataStr: string, password: string) => {
+    const decryptoData = RC4.decrypt(dataStr, password).toString(enc.Utf8)
+    const compressedData = JSON.parse(decryptoData) as Data
+    const data = restoreData(compressedData)
+    return data
+}
+
+/**
+ * 导出算法 `V5_RC4`：使用 `RC4` 加密文件
+ * @param file 
+ * @returns 
+ */
+const toFileStr_V5_RC4 = (data: Data) => {
+    const slimmedData = slimData(data)
+    const encryptoData = RC4.encrypt(JSON.stringify(slimmedData), data.password).toString()
+    const fileBlob = new Blob([VER.V5_RC4, ';', encryptoData])
     return fileBlob
 }
 

@@ -8,10 +8,10 @@ const Header:
         bookName: string,
         activeYearIndex: number,
         yearIndexs: number[],
-        onSelectYear: (newYearIndex: number) => void,
-        onEditYearIndex: (oldIndex: number, newIndex: number) => void,
-        onDeleteYear: (index: number) => void,
-        onAddYear: (yearIndex: number) => void,
+        // onSelectYear: (newYearIndex: number) => void,
+        // onEditYearIndex: (oldIndex: number, newIndex: number) => void,
+        // onDeleteYear: (index: number) => void,
+        // onAddYear: (yearIndex: number) => void,
         onBookNameChange: (newFileName: string) => void,
         onImportFile: (file: string) => void,
         onExportFile: () => void
@@ -19,29 +19,27 @@ const Header:
         bookName,
         activeYearIndex,
         yearIndexs,
-        onSelectYear,
-        onEditYearIndex,
-        onDeleteYear,
-        onAddYear,
+        // onSelectYear,
+        // onEditYearIndex,
+        // onDeleteYear,
+        // onAddYear,
         onBookNameChange,
         onImportFile,
         onExportFile
     }) => {
 
-        console.log('[Header Render]')
-
         return (
             <div className={styles.header}>
                 <div className={styles.background}></div>
                 <div className={styles.content}>
-                    <YearsEditor
+                    {/* <YearsEditor
                         activeYearIndex={activeYearIndex}
                         yearIndexs={yearIndexs}
-                        onEditYearIndex={onEditYearIndex}
-                        onAddYear={onAddYear}
-                        onDeleteYear={onDeleteYear}
-                        onSelectYear={onSelectYear}
-                    />
+                        // onEditYearIndex={onEditYearIndex}
+                        // onAddYear={onAddYear}
+                        // onDeleteYear={onDeleteYear}
+                        // onSelectYear={onSelectYear}
+                    /> */}
                     <FileController
                         fileName={bookName}
                         onFileNameChange={onBookNameChange}

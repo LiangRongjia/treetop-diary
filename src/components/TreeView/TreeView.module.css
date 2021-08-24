@@ -1,0 +1,36 @@
+.tree_view {}
+
+.tree_items {
+    font-size: 14px;
+}
+
+.tree_item {
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    padding: 0.2em 0.5em;
+    max-width: max-content;
+    margin-bottom: 0.1em;
+    border-radius: 4px;
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow-wrap: anywhere;
+    color: #595959;
+}
+
+.content:hover {
+    background-color: #f2f2f2;
+}
+
+.content[data-active="true"] {
+    font-weight: 600;
+    color: black;
+}
+
+.children {
+    margin: 0 0 0 1em;
+}

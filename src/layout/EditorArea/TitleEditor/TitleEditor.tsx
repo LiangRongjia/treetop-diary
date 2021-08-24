@@ -6,7 +6,7 @@ import styles from "./TitleEditor.module.css"
 
 const TitleEditor:
     React.FC<{
-        handle:number,
+        handle: number,
         title: string,
         placeholder: string,
         onChange: (newTitle: string) => void
@@ -28,8 +28,6 @@ const TitleEditor:
         useEffect(() => {
             setOriginalTitle(title)
         }, [handle])
-
-        console.log('[TitleEditor Render]')
 
         return (
             <TextEditor

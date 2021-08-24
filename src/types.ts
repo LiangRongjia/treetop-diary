@@ -2,6 +2,7 @@ import { getDaysCount } from "./utils/utils"
 
 class RichText {
     data
+
     constructor(data = '') {
         this.data = data
     }
@@ -12,6 +13,7 @@ class Diary {
     title
     tags
     content
+
     constructor(
         index: number,
         title: string = '',
@@ -32,16 +34,14 @@ class Month {
     summary
     diarys
     yearIndex
+
     constructor(
         yearIndex: number,
         index: number,
         title: string = '',
         tags: string[] = [],
         summary: RichText = new RichText(''),
-        diarys: Diary[] = (Array(getDaysCount(yearIndex, index))
-            .fill(0)
-            .map((_, i) => new Diary(i + 1))
-        )
+        diarys: Diary[] = []
     ) {
         this.yearIndex = yearIndex
         this.index = index
@@ -50,6 +50,9 @@ class Month {
         this.summary = summary
         this.diarys = diarys
     }
+    // getDiary(index: number) {
+    //     return this.diarys.filter(diary => diary.index === index).shift()
+    // }
 }
 
 class Year {
@@ -58,12 +61,13 @@ class Year {
     tags
     summary
     months
+
     constructor(
         index: number,
         title: string = '',
         tags: string[] = [],
         summary: RichText = new RichText(''),
-        months: Month[] = Array(12).fill(0).map((_, m) => new Month(index, m + 1))
+        months: Month[] = []
     ) {
         this.index = index
         this.title = title
@@ -71,12 +75,16 @@ class Year {
         this.summary = summary
         this.months = months
     }
+    // getMonth(index: number) {
+    //     return this.months.filter(month => month.index === index).shift()
+    // }
 }
 
 class FileData {
     formatVersion
     savedTime
     years
+
     constructor(
         formatVersion: string,
         savedTime: string,
@@ -92,6 +100,7 @@ class Data {
     bookName
     years
     password
+
     constructor(
         bookName: string = '新日记本',
         years: Year[] = [new Year((new Date).getFullYear())],
@@ -101,6 +110,45 @@ class Data {
         this.years = years
         this.password = password
     }
+    // getYear(index: number) {
+    //     return this.years.filter(year => year.index === index).shift()
+    // }
+}
+
+class Path {
+    year: number = Infinity
+    month: number = Infinity
+    date: number = Infinity
+    constructor(path?: Path) {
+        path && this.set()
+            .year(path.year)
+            .month(path.month)
+            .date(path.date)
+    }
+    set() {
+        const _this = this
+        const setter = {
+            year(index: number) {
+                _this.year = index
+                return setter
+            },
+            month(index: number) {
+                _this.month = index
+                return setter
+            },
+            date(index: number) {
+                _this.date = index
+                return setter
+            },
+            done() {
+                return _this
+            }
+        }
+        return setter
+    }
+    toString() {
+        return `${this.year}/${this.month}/${this.date}`
+    }
 }
 
 export {
@@ -109,5 +157,6 @@ export {
     Month,
     Year,
     FileData,
-    Data
+    Data,
+    Path
 }

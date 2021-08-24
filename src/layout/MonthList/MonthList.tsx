@@ -14,8 +14,6 @@ const MonthList:
         onSelectMonth
     }) => {
 
-        console.log('[MonthList Render]')
-
         return (
             <div className={styles.month_list}>
                 {months.map(month =>

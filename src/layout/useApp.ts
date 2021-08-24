@@ -1,100 +1,104 @@
 import { useState } from "react"
-import { Data, Diary, Month, Year } from "../types"
+import { Data, Diary, Month, Path, Year } from "../types"
+import { slimData } from "../utils/utils"
 import { exportFile, parseFile } from "./importAndExport"
 
 const useApp = () => {
 
     const [data, setData] = useState(new Data())
 
-    const [activeYearIndex, setActiveYearIndex] = useState(Infinity)
-    const [activeMonthIndex, setActiveMonthIndex] = useState(0)
-    const [activeDiaryIndex, setActiveDiaryIndex] = useState(0)
     const [editorHandle, setEditorHandle] = useState(0)
     const [passwordDialogShow, setPasswordDialogShow] = useState(false)
     const [exportDialogShow, setExportDialogShow] = useState(false)
 
+    const [path, setPath] = useState(new Path())
+
     const [fileBuffer, setFileBuffer] = useState('')
 
     const years = data.years || []
-    const activeYear = years.filter(y => y.index === activeYearIndex).shift()
+    const activeYear = years.filter(y => y.index === path.year).shift()
     const months = activeYear?.months || []
-    const activeMonth = months[activeMonthIndex - 1] as Month | undefined
+    const activeMonth = months.filter(m => m.index === path.month).shift()
     const diarys = activeMonth?.diarys || []
-    const activeDiary = diarys[activeDiaryIndex - 1] as Diary | undefined
+    const activeDiary = diarys.filter(d => d.index === path.date).shift()
 
     const yearIndexs = years.map(y => y.index)
     const bookName = data.bookName
 
     /** 若当前年份不合法，选择合法的第一个年份 */
     if (years.length !== 0
-        && !(years.map(year => year.index).includes(activeYearIndex))) {
-        setActiveYearIndex(years.map(year => year.index).shift() || Infinity)
+        && !(years.map(year => year.index).includes(path.year))) {
+        setPath(new Path()
+            .set()
+            .year(years.map(year => year.index).shift() || Infinity)
+            .done()
+        )
     }
 
     /** 以下是 activexxx 变量变更所触发的回调函数。 */
 
-    /** 当选中某日记时执行。 */
-    const onSelectDiary = (newDiaryIndex: number) => {
-        setEditorHandle(e => e + 1)
-        setActiveDiaryIndex(newDiaryIndex)
-    }
+    // /** 当选中某日记时执行。 */
+    // const onSelectDiary = (newDiaryIndex: number) => {
+    //     setEditorHandle(e => e + 1)
+    //     setActiveDiaryIndex(newDiaryIndex)
+    // }
 
-    /** 当选中某月份时执行。 */
-    const onSelectMonth = (newMonthIndex: number) => {
-        setEditorHandle(e => e + 1)
-        setActiveDiaryIndex(0)
-        setActiveMonthIndex(newMonthIndex)
-    }
+    // /** 当选中某月份时执行。 */
+    // const onSelectMonth = (newMonthIndex: number) => {
+    //     setEditorHandle(e => e + 1)
+    //     setActiveDiaryIndex(Infinity)
+    //     setActiveMonthIndex(newMonthIndex)
+    // }
 
-    /** 当选中某年份时执行。 */
-    const onSelectYear = (newYearIndex: number) => {
-        setEditorHandle(e => e + 1)
-        setActiveDiaryIndex(0)
-        setActiveMonthIndex(0)
-        setActiveYearIndex(newYearIndex)
-    }
+    // /** 当选中某年份时执行。 */
+    // const onSelectYear = (newYearIndex: number) => {
+    //     setEditorHandle(e => e + 1)
+    //     setActiveDiaryIndex(Infinity)
+    //     setActiveMonthIndex(Infinity)
+    //     setActiveYearIndex(newYearIndex)
+    // }
 
-    /** 当添加某年份时执行。 */
-    const onAddYear = (yearIndex: number) => {
-        const newYears = [...years]
-        newYears.push(new Year(yearIndex))
-        newYears.sort((a, b) => a.index - b.index)
-        setData({ ...data, years: newYears })
-        setActiveDiaryIndex(0)
-        setActiveMonthIndex(0)
-        setActiveYearIndex(yearIndex)
-        setEditorHandle(e => e + 1)
-    }
+    // /** 当添加某年份时执行。 */
+    // const onAddYear = (yearIndex: number) => {
+    //     const newYears = [...years]
+    //     newYears.push(new Year(yearIndex))
+    //     newYears.sort((a, b) => a.index - b.index)
+    //     setData({ ...data, years: newYears })
+    //     setActiveDiaryIndex(0)
+    //     setActiveMonthIndex(0)
+    //     setActiveYearIndex(yearIndex)
+    //     setEditorHandle(e => e + 1)
+    // }
 
-    /** 当删除某年份时执行。 */
-    const onDeleteYear = (index: number) => {
-        const newYears = years.filter(y => y.index !== index)
-        setData({ ...data, years: newYears })
-        setActiveDiaryIndex(0)
-        setActiveMonthIndex(0)
-        setActiveYearIndex(years[0]?.index || Infinity)
-        setEditorHandle(e => e + 1)
-    }
+    // /** 当删除某年份时执行。 */
+    // const onDeleteYear = (index: number) => {
+    //     const newYears = years.filter(y => y.index !== index)
+    //     setData({ ...data, years: newYears })
+    //     setActiveDiaryIndex(0)
+    //     setActiveMonthIndex(0)
+    //     setActiveYearIndex(years[0]?.index || Infinity)
+    //     setEditorHandle(e => e + 1)
+    // }
 
-    /** 当编辑某年份的年份数字 index 时执行。 */
-    const onEditYearIndex = (oldIndex: number, newIndex: number) => {
-        const year = years.filter(y => y.index === oldIndex).shift()
-        if (year == undefined) return
-        year.index = newIndex
-        years.sort((a, b) => a.index - b.index)
-        setData({ ...data })
-        setActiveDiaryIndex(0)
-        setActiveMonthIndex(0)
-        setActiveYearIndex(newIndex)
-        setEditorHandle(e => e + 1)
-    }
+    // /** 当编辑某年份的年份数字 index 时执行。 */
+    // const onEditYearIndex = (oldIndex: number, newIndex: number) => {
+    //     const year = years.filter(y => y.index === oldIndex).shift()
+    //     if (year == undefined) return
+    //     year.index = newIndex
+    //     years.sort((a, b) => a.index - b.index)
+    //     setData({ ...data })
+    //     setActiveDiaryIndex(0)
+    //     setActiveMonthIndex(0)
+    //     setActiveYearIndex(newIndex)
+    //     setEditorHandle(e => e + 1)
+    // }
 
     /** 分析编辑区将要编辑 日记、月份 还是 年份。 */
-    const edittingType = activeYearIndex === 0
+    const edittingType = path.year === Infinity
         ? 'none'
-        : activeMonthIndex === 0
+        : path.month === Infinity
             ? 'year'
-            : activeDiaryIndex === 0
+            : path.date === Infinity
                 ? 'month'
                 : 'diary'
 
@@ -246,32 +250,48 @@ const useApp = () => {
         exportFile(newData)
     }
 
+    const curPath = new Path()
+        .set()
+        .year(path.year)
+        .month(path.month)
+        .date(path.date)
+        .done()
+
+    const selectPath = (path: Path) => {
+        setPath(path)
+        setEditorHandle(e => e + 1)
+    }
+
     return {
         yearIndexs,
+        slimYears: slimData(data).years,
+        curPath,
         months,
         diarys,
-        activeDiaryIndex,
-        activeMonthIndex,
-        activeYearIndex,
+        path,
+        activeDiaryIndex: path.date,
+        activeMonthIndex: path.month,
+        activeYearIndex: path.year,
         editTarget,
         editorHandle,
         bookName,
         passwordDialogShow,
         password: data.password,
         exportDialogShow,
-        onSelectYear,
-        onSelectMonth,
-        onSelectDiary,
-        onEditYearIndex,
-        onDeleteYear,
-        onAddYear,
+        // onSelectYear,
+        // onSelectMonth,
+        // onSelectDiary,
+        // onEditYearIndex,
+        // onDeleteYear,
+        // onAddYear,
         onBookNameChange,
         onImportFile,
         onHeaderExportFile,
         verifyPassword,
         hidePasswordDialog,
         hideExportDialog,
-        dialogExportFile
+        dialogExportFile,
+        selectPath
     }
 }
 

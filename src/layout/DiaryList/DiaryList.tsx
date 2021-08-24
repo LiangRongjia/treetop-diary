@@ -14,8 +14,6 @@ const DiaryList:
         onSelectDiary
     }) => {
 
-        console.log('[DiaryList Render]')
-
         return (
             <div className={styles.diary_list}>
                 {diarys.map(diary => (
