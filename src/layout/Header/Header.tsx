@@ -32,20 +32,22 @@ const Header:
 
         return (
             <div className={styles.header}>
-                <YearsEditor
-                    activeYearIndex={activeYearIndex}
-                    yearIndexs={yearIndexs}
-                    onEditYearIndex={onEditYearIndex}
-                    onAddYear={onAddYear}
-                    onDeleteYear={onDeleteYear}
-                    onSelectYear={onSelectYear}
-                />
-                <FileController
-                    fileName={bookName}
-                    onFileNameChange={onBookNameChange}
-                    onImportFile={onImportFile}
-                    onExportFile={onExportFile}
-                />
+                <div className={styles.background}></div>
+                <div className={styles.content}>
+                    <YearsEditor
+                        activeYearIndex={activeYearIndex}
+                        yearIndexs={yearIndexs}
+                        onEditYearIndex={onEditYearIndex}
+                        onAddYear={onAddYear}
+                        onDeleteYear={onDeleteYear}
+                        onSelectYear={onSelectYear}
+                    />
+                    <FileController
+                        fileName={bookName}
+                        onFileNameChange={onBookNameChange}
+                        onImportFile={onImportFile}
+                        onExportFile={onExportFile}
+                    /></div>
             </div>
         )
     }

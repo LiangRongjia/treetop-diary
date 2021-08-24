@@ -1,19 +1,22 @@
 .app {
-    height: 100vh;
-    width: 100vw;
-    display: grid;
-    background-color: #f7f7f7;
-    grid-template-columns: auto auto 1fr;
-    grid-template-rows: 40px 1fr;
-    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fafafa;
+}
+
+.main {
+    display: flex;
+    padding: 1.5em;
+    width: 980px;
 }
 
 /* ios 添加下面样式 */
 
 /* 写法技巧来源：https://stackoverflow.com/questions/30102792/css-media-query-to-target-only-ios-devices */
 
-@supports (-webkit-touch-callout: none) {
+/* @supports (-webkit-touch-callout: none) {
     .app {
         height: -webkit-fill-available;
     }
-}
+} */

@@ -1,10 +1,6 @@
 .diary_list {
-    width: 300px;
-    grid-column: 2/3;
-    grid-row: 2/3;
+    flex-basis: 25%;
     box-sizing: border-box;
-    border-left: 1px solid rgba(0, 0, 0, 0.2);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
     padding-bottom: 16px;
     overflow: auto;
 }

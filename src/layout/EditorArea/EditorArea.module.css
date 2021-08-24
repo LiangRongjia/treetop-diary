@@ -1,13 +1,9 @@
 .diary_page {
-    grid-row: 2/3;
-    grid-column: 3/4;
+    flex-basis: 50%;
     height: 100%;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-    border-left: 1px solid rgba(0, 0, 0, 0.2);
-    border-right: 1px solid rgba(0, 0, 0, 0.2);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
     overflow: auto;
 }
 
@@ -17,7 +13,7 @@
 }
 
 .content_editor>* {
-    border-top: 1px solid rgba(0, 0, 0, 0.2) !important;
+    border-top: none !important;
     border-right: none !important;
     border-bottom: none !important;
     border-left: none !important;

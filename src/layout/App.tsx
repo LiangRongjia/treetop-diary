@@ -56,37 +56,39 @@ const App = () => {
                 onImportFile={onImportFile}
                 onExportFile={onHeaderExportFile}
             />
-            {/* <MonthList
+            <main className={styles.main}>
+                {/* <MonthList
                 months={months}
                 activeMonthIndex={activeMonthIndex}
                 onSelectMonth={onSelectMonth}
             /> */}
-            {new MonthListClass()
-                .activeMonthIndex(activeMonthIndex)
-                .months(months)
-                .onSelectMonth(onSelectMonth)
-                .done()}
-            {activeMonthIndex === 0
-                ? undefined
-                : <DiaryList
-                    diarys={diarys}
-                    activeDiaryIndex={activeDiaryIndex}
-                    onSelectDiary={onSelectDiary}
+                {new MonthListClass()
+                    .activeMonthIndex(activeMonthIndex)
+                    .months(months)
+                    .onSelectMonth(onSelectMonth)
+                    .done()}
+                {activeMonthIndex === 0
+                    ? undefined
+                    : <DiaryList
+                        diarys={diarys}
+                        activeDiaryIndex={activeDiaryIndex}
+                        onSelectDiary={onSelectDiary}
+                    />
+                }
+                <EditorArea
+                    year={activeYearIndex}
+                    month={activeMonthIndex}
+                    date={activeDiaryIndex}
+                    handle={editorHandle}
+                    title={editTarget.title}
+                    tags={editTarget.tags}
+                    content={editTarget.content}
+                    titleEditorPlaceholder={editTarget.titleEditorPlaceholder}
+                    onContentChange={editTarget.onContentChange}
+                    onTagsChange={editTarget.onTagsChange}
+                    onTitleChange={editTarget.onTitleChange}
                 />
-            }
-            <EditorArea
-                year={activeYearIndex}
-                month={activeMonthIndex}
-                date={activeDiaryIndex}
-                handle={editorHandle}
-                title={editTarget.title}
-                tags={editTarget.tags}
-                content={editTarget.content}
-                titleEditorPlaceholder={editTarget.titleEditorPlaceholder}
-                onContentChange={editTarget.onContentChange}
-                onTagsChange={editTarget.onTagsChange}
-                onTitleChange={editTarget.onTitleChange}
-            />
+            </main>
             <PasswordDialog
                 isShow={passwordDialogShow}
                 hide={hidePasswordDialog}
