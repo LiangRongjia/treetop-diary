@@ -67,9 +67,9 @@ const readVersion = (file: string) => {
  */
 const parseData_V1_JSON = (dataStr: string) => {
     const data = {
-        ...JSON.parse(dataStr),
+        ...JSON.parse(dataStr) as Data,
         password: ''
-    } as Data
+    }
     return data
 }
 
@@ -90,10 +90,8 @@ const toFileStr_V1_JSON = (data: Data) => {
  * @returns 
  */
 const parseData_V2_JSON = (dataStr: string) => {
-    const compressedData = JSON.parse(dataStr) as Data
     const data = {
-        // ...restoreData(compressedData),
-        ...compressedData,
+        ...JSON.parse(dataStr) as Data,
         password: ''
     }
     return data
@@ -118,9 +116,7 @@ const toFileStr_V2_JSON = (data: Data) => {
  * @returns 
  */
 const parseData_V3_PASSWORD = (dataStr: string) => {
-    const compressedData = JSON.parse(dataStr) as Data
-    // const data = restoreData(compressedData)
-    const data = compressedData
+    const data = JSON.parse(dataStr) as Data
     return data
 }
 
@@ -142,9 +138,7 @@ const toFileStr_V3_PASSWORD = (data: Data) => {
  */
 const parseData_V4_RC4 = (dataStr: string, password: string) => {
     const decryptoData = RC4.decrypt(dataStr, password).toString(enc.Utf8)
-    const compressedData = JSON.parse(decryptoData) as Data
-    // const data = restoreData(compressedData)
-    const data = compressedData
+    const data = JSON.parse(decryptoData) as Data
     return data
 }
 

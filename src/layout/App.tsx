@@ -17,10 +17,7 @@ const App = () => {
 
     const {
         yearIndexs,
-        slimYears,
-        curPath,
-        months,
-        diarys,
+        years: slimYears,
         path,
         activeYearIndex,
         activeDiaryIndex,
@@ -31,12 +28,6 @@ const App = () => {
         passwordDialogShow,
         password,
         exportDialogShow,
-        // onSelectYear,
-        // onSelectMonth,
-        // onSelectDiary,
-        // onEditYearIndex,
-        // onDeleteYear,
-        // onAddYear,
         onBookNameChange,
         onImportFile,
         onHeaderExportFile,
@@ -44,7 +35,10 @@ const App = () => {
         hidePasswordDialog,
         hideExportDialog,
         dialogExportFile,
-        selectPath
+        changePath,
+        onAddDiary,
+        onAddMonth,
+        onAddYear
     } = useApp()
 
     return (
@@ -62,12 +56,14 @@ const App = () => {
                 onExportFile={onHeaderExportFile}
             />
             <main className={styles.main}>
-                {
-                    new Catalog()
-                        .years(slimYears)
-                        .path(path)
-                        .onChangePath(selectPath)
-                        .done()
+                {new Catalog()
+                    .years(slimYears)
+                    .path(path)
+                    .onChangePath(changePath)
+                    .onAddDiary(onAddDiary)
+                    .onAddMonth(onAddMonth)
+                    .onAddYear(onAddYear)
+                    .done()
                 }
                 <EditorArea
                     year={activeYearIndex}
