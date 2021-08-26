@@ -1,7 +1,6 @@
 .current_path {
     display: flex;
     margin-left: 16px;
-    margin-top: 16px;
-    color: rgba(0,0,0,0.6);
+    color: rgba(0, 0, 0, 0.6);
     line-height: 1;
 }

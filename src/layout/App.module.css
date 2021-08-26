@@ -7,8 +7,21 @@
 
 .main {
     display: flex;
-    padding: 1.5em;
+    padding: 52px 1.5em 0 1.5em;
     width: 980px;
+}
+
+.catalog_wrapper {
+    position: sticky;
+    position: -webkit-sticky;
+    align-self: flex-end;
+    bottom: 0;
+    flex-basis: 25%;
+    box-sizing: border-box;
+    padding-bottom: 52px;
+    min-height: calc(100vh - 104px);
+    display: flex;
+    overflow: hidden;
 }
 
 /* ios 添加下面样式 */

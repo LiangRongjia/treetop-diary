@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { createRef, useEffect, useState } from 'react'
 
 import styles from './App.module.css'
 
@@ -56,15 +56,17 @@ const App = () => {
                 onExportFile={onHeaderExportFile}
             />
             <main className={styles.main}>
-                {new Catalog()
-                    .years(slimYears)
-                    .path(path)
-                    .onChangePath(changePath)
-                    .onAddDiary(onAddDiary)
-                    .onAddMonth(onAddMonth)
-                    .onAddYear(onAddYear)
-                    .done()
-                }
+                <div className={styles.catalog_wrapper}>
+                    {new Catalog()
+                        .years(slimYears)
+                        .path(path)
+                        .onChangePath(changePath)
+                        .onAddDiary(onAddDiary)
+                        .onAddMonth(onAddMonth)
+                        .onAddYear(onAddYear)
+                        .done()
+                    }
+                </div>
                 <EditorArea
                     year={activeYearIndex}
                     month={activeMonthIndex}

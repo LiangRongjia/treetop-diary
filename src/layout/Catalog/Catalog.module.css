@@ -1,4 +1,6 @@
 .catalog {
-    flex-basis: 25%;
-    overflow: hidden;
+    align-self: flex-start;
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
 }
