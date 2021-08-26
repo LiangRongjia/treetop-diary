@@ -1,16 +1,12 @@
-import React, { createRef, useEffect, useState } from 'react'
+import React from 'react'
 
 import styles from './App.module.css'
 
 import Header from './Header/Header'
-import MonthList, { MonthListClass } from './MonthList/MonthList'
-import DiaryList from './DiaryList/DiaryList'
 import EditorArea from './EditorArea/EditorArea'
 import useApp from './useApp'
 import PasswordDialog from './PasswordDialog/PasswordDialog'
 import ExportDialog from './ExportDialog/ExportDialog'
-import { TreeItem, TreeView } from '../components/TreeView/TreeView'
-import { Path } from '../types'
 import { Catalog } from './Catalog/Catalog'
 
 const App = () => {
@@ -20,8 +16,6 @@ const App = () => {
         years: slimYears,
         path,
         activeYearIndex,
-        activeDiaryIndex,
-        activeMonthIndex,
         editTarget,
         editorHandle,
         bookName,
@@ -68,9 +62,7 @@ const App = () => {
                     }
                 </div>
                 <EditorArea
-                    year={activeYearIndex}
-                    month={activeMonthIndex}
-                    date={activeDiaryIndex}
+                    path={path}
                     handle={editorHandle}
                     title={editTarget.title}
                     tags={editTarget.tags}

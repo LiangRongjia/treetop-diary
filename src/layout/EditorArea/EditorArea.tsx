@@ -4,12 +4,11 @@ import TitleEditor from './TitleEditor/TitleEditor'
 import RichTextEditor from '../../components/RichTextEditor/RichTextEditor'
 import TagsEditor from './TagsEditor/TagsEditor'
 import CurrentPath from './CurrentPath/CurrentPath'
+import { Path } from '../../types'
 
 const EditorArea:
     React.FC<{
-        year: number,
-        month: number,
-        date: number,
+        path: Path,
         handle: number,
         title: string,
         tags: string[],
@@ -19,9 +18,7 @@ const EditorArea:
         onTagsChange: (newTags: string[]) => void,
         onContentChange: (newContent: string) => void
     }> = ({
-        year,
-        month,
-        date,
+        path,
         handle,
         title,
         tags,
@@ -35,9 +32,7 @@ const EditorArea:
         return (
             <div className={styles.diary_page}>
                 <CurrentPath
-                    year={year}
-                    month={month}
-                    date={date}
+                    path={path}
                 />
                 <TitleEditor
                     handle={handle}

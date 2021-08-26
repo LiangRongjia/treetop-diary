@@ -3,4 +3,16 @@
     margin-left: 16px;
     color: rgba(0, 0, 0, 0.6);
     line-height: 1;
+    align-items: center;
+}
+
+.delete {
+    margin-left: 12px;
+    font-family: 'Segoe MDL2 Assets';
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.delete:hover {
+    color: black;
 }

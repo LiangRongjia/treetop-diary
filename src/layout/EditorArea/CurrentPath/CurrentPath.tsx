@@ -1,27 +1,25 @@
 import React from "react"
+import { Path } from "../../../types"
 
 import styles from "./CurrentPath.module.css"
 
 const CurrentPath
     : React.FC<{
-        year: number,
-        month: number,
-        date: number
+        path: Path
     }> = ({
-        year,
-        month,
-        date
+        path
     }) => {
 
         return (
             <div className={styles.current_path}>
-                <div>{year}</div>
-                {month === 0
+                <div>{path.year}</div>
+                {path.month === Infinity
                     ? undefined
-                    : <div>&nbsp;/ {month}</div>}
-                {date === 0
+                    : <div>&nbsp;/ {path.month}</div>}
+                {path.date === Infinity
                     ? undefined
-                    : <div>&nbsp;/ {date}</div>}
+                    : <div>&nbsp;/ {path.date}</div>}
+                <div className={styles.delete}></div>
             </div>
         )
     }
