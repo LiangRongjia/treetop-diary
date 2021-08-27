@@ -6,8 +6,10 @@ import styles from "./CurrentPath.module.css"
 const CurrentPath
     : React.FC<{
         path: Path
+        onDeletePath: (path: Path) => void
     }> = ({
-        path
+        path,
+        onDeletePath
     }) => {
 
         return (
@@ -19,7 +21,9 @@ const CurrentPath
                 {path.date === Infinity
                     ? undefined
                     : <div>&nbsp;/ {path.date}</div>}
-                <div className={styles.delete}></div>
+                <div className={styles.delete}
+                    onClick={() => { onDeletePath(path) }}
+                ></div>
             </div>
         )
     }

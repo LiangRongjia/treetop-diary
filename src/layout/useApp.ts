@@ -242,6 +242,31 @@ const useApp = () => {
         changePath(new Path().set().year(path.year).done())
     }
 
+    const onDeletePath = (path: Path) => {
+        const newData = { ...data }
+        const newPath = new Path(path)
+        if (path.year === Infinity) {
+            return
+        } else if (path.month === Infinity) {
+            newData.years = newData.years.filter(y => y.index !== path.year)
+        } else if (path.date === Infinity) {
+            newData.years.filter(y => y.index === path.year)
+                .forEach(year => {
+                    year.months = year.months.filter(m => m.index !== path.month)
+                })
+        } else {
+            newData.years.filter(y => y.index === path.year)
+                .forEach(year => {
+                    year.months.filter(m => m.index === path.month)
+                        .forEach(month => {
+                            month.diarys = month.diarys.filter(d => d.index !== path.date)
+                        })
+                })
+        }
+        setData(_ => newData)
+        changePath(newPath)
+    }
+
     return {
         yearIndexs,
         years,
@@ -267,7 +292,8 @@ const useApp = () => {
         changePath,
         onAddDiary,
         onAddMonth,
-        onAddYear
+        onAddYear,
+        onDeletePath
     }
 }
 

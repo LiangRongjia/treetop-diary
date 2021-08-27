@@ -16,23 +16,26 @@ const EditorArea:
         titleEditorPlaceholder: string,
         onTitleChange: (newTitle: string) => void,
         onTagsChange: (newTags: string[]) => void,
-        onContentChange: (newContent: string) => void
+        onContentChange: (newContent: string) => void,
+        onDeletePath: (path: Path) => void
     }> = ({
         path,
         handle,
         title,
         tags,
         content,
+        titleEditorPlaceholder,
         onTitleChange,
         onTagsChange,
         onContentChange,
-        titleEditorPlaceholder
+        onDeletePath
     }) => {
 
         return (
             <div className={styles.diary_page}>
                 <CurrentPath
                     path={path}
+                    onDeletePath={onDeletePath}
                 />
                 <TitleEditor
                     handle={handle}

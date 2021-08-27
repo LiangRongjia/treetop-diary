@@ -32,7 +32,8 @@ const App = () => {
         changePath,
         onAddDiary,
         onAddMonth,
-        onAddYear
+        onAddYear,
+        onDeletePath
     } = useApp()
 
     return (
@@ -71,6 +72,7 @@ const App = () => {
                     onContentChange={editTarget.onContentChange}
                     onTagsChange={editTarget.onTagsChange}
                     onTitleChange={editTarget.onTitleChange}
+                    onDeletePath={onDeletePath}
                 />
             </main>
             <PasswordDialog
