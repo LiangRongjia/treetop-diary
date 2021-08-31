@@ -42,25 +42,20 @@ const App = () => {
                 activeYearIndex={activeYearIndex}
                 yearIndexs={yearIndexs}
                 bookName={bookName}
-                // onSelectYear={onSelectYear}
-                // onEditYearIndex={onEditYearIndex}
-                // onDeleteYear={onDeleteYear}
-                // onAddYear={onAddYear}
                 onBookNameChange={onBookNameChange}
                 onImportFile={onImportFile}
                 onExportFile={onHeaderExportFile}
             />
             <main className={styles.main}>
                 <div className={styles.catalog_wrapper}>
-                    {new Catalog()
-                        .years(slimYears)
-                        .path(path)
-                        .onChangePath(changePath)
-                        .onAddDiary(onAddDiary)
-                        .onAddMonth(onAddMonth)
-                        .onAddYear(onAddYear)
-                        .done()
-                    }
+                    <Catalog
+                        years={slimYears}
+                        path={path}
+                        onChangePath={changePath}
+                        onAddDiary={onAddDiary}
+                        onAddMonth={onAddMonth}
+                        onAddYear={onAddYear}
+                    />
                 </div>
                 <EditorArea
                     path={path}
