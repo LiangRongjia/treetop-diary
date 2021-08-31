@@ -1,6 +1,7 @@
 import React, { createRef } from "react"
-import { PrimaryButton, DefaultButton } from '@fluentui/react/lib/Button'
 import { Dialog } from "../../components/Dialog/Dialog"
+import MUIButton from "@material-ui/core/Button"
+import TextField from "@material-ui/core/TextField"
 
 const PasswordDialog:
     React.FC<{
@@ -32,12 +33,14 @@ const PasswordDialog:
                 show={isShow}
                 title={'输入密码'}
                 content={
-                    <input ref={inputEleRef} type="password"></input>
+                    <TextField ref={inputEleRef} type="password"></TextField>
                 }
-                footer={[
-                    <PrimaryButton key='ok' onClick={_onOkClick} text="确定" />,
-                    <DefaultButton key='cancel' onClick={_onCancelClick} text="取消" />
-                ]}
+                footer={
+                    <>
+                        <MUIButton onClick={_onOkClick} variant="contained" >"确定"</MUIButton>
+                        <MUIButton onClick={_onCancelClick}>"取消"</MUIButton>
+                    </>
+                }
                 onDismiss={_onDismiss}
             />
         )

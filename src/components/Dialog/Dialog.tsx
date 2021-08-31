@@ -1,13 +1,14 @@
-import React, { useMemo } from "react"
+import React from "react"
 
-import { Dialog as FLDialog, DialogType, DialogFooter } from "@fluentui/react"
-
-import { useId } from '@fluentui/react-hooks'
+import MUIDialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
 
 const Dialog: React.FC<{
     title: string
-    content: JSX.Element | JSX.Element[]
-    footer: JSX.Element | JSX.Element[]
+    content: JSX.Element
+    footer: JSX.Element
     show: boolean
     onDismiss: () => void
 }> = ({
@@ -18,38 +19,17 @@ const Dialog: React.FC<{
     onDismiss = () => { }
 }) => {
 
-        const labelId = useId('dialogLabel')
-        const subTextId = useId('subTextLabel')
-
-        const modalProps = useMemo(
-            () => ({
-                titleAriaId: labelId,
-                subtitleAriaId: subTextId,
-                isBlocking: false,
-                styles: { main: { maxWidth: 450 } },
-            }),
-            [labelId, subTextId],
-        )
-
-        const dialogContentProps = {
-            type: DialogType.normal,
-            title: title,
-            closeButtonAriaLabel: '关闭',
-        }
-
         return (
             <div style={{ position: 'fixed' }}>
-                <FLDialog
-                    hidden={!show}
-                    onDismiss={onDismiss}
-                    dialogContentProps={dialogContentProps}
-                    modalProps={modalProps}
-                >
-                    {content || null}
-                    <DialogFooter>
-                        {footer || null}
-                    </DialogFooter>
-                </FLDialog>
+                <MUIDialog open={show} onClose={onDismiss}>
+                    <DialogTitle>{title}</DialogTitle>
+                    <DialogContent>
+                        {content}
+                    </DialogContent>
+                    <DialogActions>
+                        {footer}
+                    </DialogActions>
+                </MUIDialog>
             </div>
         )
     }

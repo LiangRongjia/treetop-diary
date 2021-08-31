@@ -1,6 +1,8 @@
 import React, { createRef, useEffect } from "react"
-import { PrimaryButton, DefaultButton } from '@fluentui/react/lib/Button'
 import { Dialog } from "../../components/Dialog/Dialog"
+import MUIButton from "@material-ui/core/Button"
+import DialogContentText from "@material-ui/core/DialogContentText"
+import TextField from "@material-ui/core/TextField"
 
 const ExportDialog:
     React.FC<{
@@ -41,14 +43,22 @@ const ExportDialog:
                 title='设置密码'
                 content={
                     <>
-                        <p>以下自动填充当前密码，如无需修改，请直接确认导出。</p>
-                        <input ref={inputEleRef} type="password"></input>
+                        <DialogContentText>以下自动填充当前密码，如无需修改，请直接确认导出。</DialogContentText>
+                        <TextField
+                            ref={inputEleRef}
+                            type="password"
+                            size='small'
+                            autoFocus
+                            margin="dense">
+                        </TextField>
                     </>
                 }
-                footer={[
-                    <PrimaryButton key='ok' onClick={_onOkClick} text="确定" />,
-                    <DefaultButton key='cancel' onClick={_onCancelClick} text="取消" />
-                ]}
+                footer={
+                    <>
+                        <MUIButton onClick={_onOkClick} variant="contained">确定</MUIButton>
+                        <MUIButton onClick={_onCancelClick}>取消</MUIButton>
+                    </>
+                }
                 onDismiss={_onCancelClick}
             />
         )
