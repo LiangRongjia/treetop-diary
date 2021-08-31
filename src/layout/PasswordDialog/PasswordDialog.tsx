@@ -1,6 +1,6 @@
 import React, { createRef } from "react"
 import { PrimaryButton, DefaultButton } from '@fluentui/react/lib/Button'
-import Dialog from "../../components/Dialog/Dialog"
+import { Dialog } from "../../components/Dialog/Dialog"
 
 const PasswordDialog:
     React.FC<{
@@ -28,18 +28,18 @@ const PasswordDialog:
         const _onDismiss = _onCancelClick
 
         return (
-            new Dialog()
-                .title('输入密码')
-                .content(
+            <Dialog
+                show={isShow}
+                title={'输入密码'}
+                content={
                     <input ref={inputEleRef} type="password"></input>
-                )
-                .footer(
+                }
+                footer={[
                     <PrimaryButton key='ok' onClick={_onOkClick} text="确定" />,
                     <DefaultButton key='cancel' onClick={_onCancelClick} text="取消" />
-                )
-                .onDismiss(_onDismiss)
-                .show(isShow)
-                .done()
+                ]}
+                onDismiss={_onDismiss}
+            />
         )
     }
 

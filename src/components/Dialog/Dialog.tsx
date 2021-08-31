@@ -4,39 +4,20 @@ import { Dialog as FLDialog, DialogType, DialogFooter } from "@fluentui/react"
 
 import { useId } from '@fluentui/react-hooks'
 
-class Dialog {
-    #key: string = ''
-    #content: JSX.Element[] = []
-    #footer: JSX.Element[] = []
-    #show: boolean = true
-    #title: string = '对话框'
-    #onDismiss: () => void = () => { }
+const Dialog: React.FC<{
+    title: string
+    content: JSX.Element | JSX.Element[]
+    footer: JSX.Element | JSX.Element[]
+    show: boolean
+    onDismiss: () => void
+}> = ({
+    content = [],
+    footer = [],
+    show = true,
+    title = '标题',
+    onDismiss = () => { }
+}) => {
 
-    constructor(key: string = '') {
-        this.#key = key
-    }
-    title(text: string) {
-        this.#title = text
-        return this
-    }
-    content(...eles: JSX.Element[]) {
-        this.#content = this.#content.concat(eles)
-        return this
-    }
-    footer(...eles: JSX.Element[]) {
-        this.#footer = this.#footer.concat(eles)
-        return this
-
-    }
-    show(bool: boolean) {
-        this.#show = bool
-        return this
-    }
-    onDismiss(callback: () => void) {
-        this.#onDismiss = callback
-        return this
-    }
-    done() {
         const labelId = useId('dialogLabel')
         const subTextId = useId('subTextLabel')
 
@@ -52,31 +33,25 @@ class Dialog {
 
         const dialogContentProps = {
             type: DialogType.normal,
-            title: this.#title,
+            title: title,
             closeButtonAriaLabel: '关闭',
         }
 
         return (
-            <div key={this.#key} style={{ position: 'fixed' }}>
+            <div style={{ position: 'fixed' }}>
                 <FLDialog
-                    hidden={!this.#show}
-                    onDismiss={this.#onDismiss}
+                    hidden={!show}
+                    onDismiss={onDismiss}
                     dialogContentProps={dialogContentProps}
                     modalProps={modalProps}
                 >
-                    {this.#content.length <= 1
-                        ? this.#content[0]
-                        : this.#content}
+                    {content || null}
                     <DialogFooter>
-                        {this.#footer.length <= 1
-                            ? this.#footer[0]
-                            : this.#footer
-                        }
+                        {footer || null}
                     </DialogFooter>
                 </FLDialog>
             </div>
         )
     }
-}
 
-export default Dialog
+export { Dialog }
