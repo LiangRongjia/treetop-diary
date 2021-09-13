@@ -1,4 +1,4 @@
-import React, { createRef } from "react"
+import React, { createRef, useState } from "react"
 import { Dialog } from "../../components/Dialog/Dialog"
 import MUIButton from "@material-ui/core/Button"
 import TextField from "@material-ui/core/TextField"
@@ -14,26 +14,35 @@ const PasswordDialog:
         verify
     }) => {
 
-        const inputEleRef = createRef<HTMLInputElement>()
+        const [password, setPassword] = useState('')
 
         const _onOkClick = () => {
-            inputEleRef.current && verify(inputEleRef.current.value)
+            verify(password)
+            setPassword('')
             hide()
         }
 
         const _onCancelClick = () => {
-            inputEleRef.current && (inputEleRef.current.value = '')
+            setPassword('')
             hide()
         }
 
         const _onDismiss = _onCancelClick
+
+        const _onInput = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+            setPassword(e.target.value)
+        }
 
         return (
             <Dialog
                 show={isShow}
                 title={'输入密码'}
                 content={
-                    <TextField ref={inputEleRef} type="password"></TextField>
+                    <TextField
+                        value={password}
+                        type="password"
+                        onChange={e => { _onInput(e) }}
+                    ></TextField>
                 }
                 footer={
                     <>

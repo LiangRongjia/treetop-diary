@@ -1,4 +1,4 @@
-import React, { createRef, useEffect } from "react"
+import React, { createRef, useEffect, useState } from "react"
 import { Dialog } from "../../components/Dialog/Dialog"
 import MUIButton from "@material-ui/core/Button"
 import DialogContentText from "@material-ui/core/DialogContentText"
@@ -17,25 +17,22 @@ const ExportDialog:
         onExport
     }) => {
 
-        const inputEleRef = createRef<HTMLInputElement>()
+        const [currentPassword, setCurrentPassword] = useState(defaultPassword)
 
         const _onOkClick = () => {
-            inputEleRef.current && onExport(inputEleRef.current.value)
+            onExport(currentPassword)
+            setCurrentPassword('')
             hide()
         }
 
         const _onCancelClick = () => {
-            inputEleRef.current && (inputEleRef.current.value = '')
+            setCurrentPassword('')
             hide()
         }
 
-        useEffect(() => {
-            setTimeout(() => {
-                show === true
-                    && inputEleRef.current
-                    && (inputEleRef.current.value = defaultPassword)
-            })
-        }, [show])
+        const _onInput = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+            setCurrentPassword(e.target.value)
+        }
 
         return (
             <Dialog
@@ -45,11 +42,12 @@ const ExportDialog:
                     <>
                         <DialogContentText>以下自动填充当前密码，如无需修改，请直接确认导出。</DialogContentText>
                         <TextField
-                            ref={inputEleRef}
+                            value={currentPassword}
                             type="password"
                             size='small'
                             autoFocus
-                            margin="dense">
+                            margin="dense"
+                            onChange={e => { _onInput(e) }}>
                         </TextField>
                     </>
                 }
