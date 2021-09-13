@@ -46,8 +46,8 @@ const PasswordDialog:
                 }
                 footer={
                     <>
-                        <MUIButton onClick={_onOkClick} variant="contained" >"确定"</MUIButton>
-                        <MUIButton onClick={_onCancelClick}>"取消"</MUIButton>
+                        <MUIButton onClick={_onOkClick} variant="contained" >确定</MUIButton>
+                        <MUIButton onClick={_onCancelClick}>取消</MUIButton>
                     </>
                 }
                 onDismiss={_onDismiss}
